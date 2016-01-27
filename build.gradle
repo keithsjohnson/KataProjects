@@ -1,0 +1,46 @@
+allprojects {
+	task projects << { task -> println "Project $task.project.name" }
+}
+
+subprojects {
+	apply plugin: 'java'
+	apply plugin: 'eclipse'
+
+    dependencies {        
+        testCompile "junit:junit:4+"
+    }
+    
+ 	sourceCompatibility = 1.8
+	targetCompatibility = 1.8
+	
+	jar {
+		manifest.attributes provider: 'gradle'
+	}
+
+    repositories {
+        mavenCentral()
+    }
+
+	task copyTask(type: Copy) {
+    	from 'build/libs'
+    	from 'src/main/docker'
+    	include '*.jar'
+    	include 'Dockerfile'
+    	include 'Dockerrun.aws.json'
+    	include '.ebignore'
+    	include 'eb-create-and-deploy-*.cmd'
+    	into 'build/docker'
+	}
+
+    task buildDockerZip(type: Zip, dependsOn:copyTask) {
+  	    from 'build/docker'
+        include '*.jar'
+        include 'Dockerfile'
+        include 'Dockerrun.aws.json'
+  	    archiveName baseName + 'Docker.zip'
+    }
+    
+}
+
+project(':uk.co.keithsjohnson.jasperreports') {
+}

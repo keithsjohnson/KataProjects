@@ -1,0 +1,2 @@
+include ":uk.co.keithsjohnson.jasperreports"
+rootProject.name = 'KataProjects'
