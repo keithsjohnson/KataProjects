@@ -44,3 +44,6 @@ subprojects {
 
 project(':uk.co.keithsjohnson.jasperreports') {
 }
+
+project(':uk.co.keithsjohnson.springboot.eureka') {
+}
