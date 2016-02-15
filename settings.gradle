@@ -1,3 +1,4 @@
 include ":uk.co.keithsjohnson.jasperreports"
 include ":uk.co.keithsjohnson.springboot.eureka"
+include ":uk.co.keithsjohnson.springboot.eureka.client"
 rootProject.name = 'KataProjects'

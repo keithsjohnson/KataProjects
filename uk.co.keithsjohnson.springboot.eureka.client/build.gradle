@@ -18,7 +18,7 @@ apply plugin: 'spring-boot'
 apply plugin: 'io.spring.dependency-management' 
 
 jar {
-	baseName = 'uk.co.keithsjohnson.springboot.eureka'
+	baseName = 'uk.co.keithsjohnson.springboot.eureka.client'
 	version = '0.0.1-SNAPSHOT'
 }
 sourceCompatibility = 1.8
@@ -34,7 +34,7 @@ repositories {
 
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-actuator")
-	compile('org.springframework.cloud:spring-cloud-starter-eureka-server')
+	compile('org.springframework.cloud:spring-cloud-starter-eureka')
 	testCompile('org.springframework.boot:spring-boot-starter-test') 
 }
 
