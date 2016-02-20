@@ -45,5 +45,18 @@ subprojects {
 project(':uk.co.keithsjohnson.jasperreports') {
 }
 
+project(':uk.co.keithsjohnson.springboot.accounts') {
+}
+
+project(':uk.co.keithsjohnson.springboot.circuitbreaker') {
+}
+
 project(':uk.co.keithsjohnson.springboot.eureka') {
 }
+
+project(':uk.co.keithsjohnson.springboot.eureka.client') {
+}
+
+project(':uk.co.keithsjohnson.springboot.users') {
+}
+

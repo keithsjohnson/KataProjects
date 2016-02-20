@@ -27,7 +27,6 @@ http://localhost:8190/metrics
 http://localhost:8190/mappings
 http://localhost:8190/shutdown
 http://localhost:8190/trace
-http://localhost:8190/hystrix.stream
 
 
 Info
@@ -38,7 +37,3 @@ http://cloud.spring.io/spring-cloud-netflix/spring-cloud-netflix.html
 
 Spring Boot Actuator
 http://www.javabeat.net/spring-boot-actuator/
-
-https://github.com/Netflix/Hystrix/tree/master/hystrix-contrib/hystrix-javanica#configuration
-
-https://github.com/Netflix/Hystrix/wiki/Configuration

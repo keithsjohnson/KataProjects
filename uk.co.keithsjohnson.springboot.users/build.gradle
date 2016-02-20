@@ -18,7 +18,7 @@ apply plugin: 'spring-boot'
 apply plugin: 'io.spring.dependency-management' 
 
 jar {
-	baseName = 'uk.co.keithsjohnson.springboot.eureka.client'
+	baseName = 'uk.co.keithsjohnson.springboot.eureka.users'
 	version = '0.0.1-SNAPSHOT'
 }
 sourceCompatibility = 1.8
