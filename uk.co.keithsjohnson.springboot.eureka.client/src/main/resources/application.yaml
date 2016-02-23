@@ -1,34 +1,34 @@
-spring:
-  profiles: peer1
-eureka:
-  client:
+#spring:
+#  profiles: peer1
+#eureka:
+#  client:
     #registerWithEureka: false
     #fetchRegistry: false
-    serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
-  instance:
-    hostname: localhost
-    statusPageUrl: https://${eureka.hostname}/info
-    healthCheckUrl: https://${eureka.hostname}/health
-    homePageUrl: https://${eureka.hostname}/
+#    serviceUrl:
+#      defaultZone: http://localhost:8761/eureka/
+#  instance:
+#    hostname: localhost
+#    statusPageUrl: https://${eureka.hostname}/info
+#    healthCheckUrl: https://${eureka.hostname}/health
+#    homePageUrl: https://${eureka.hostname}/
 info:
   app:
     name: KeithEurekaClient
     description: Keith Eureka Client Application
     version: 0.0.1
-endpoints:
-  actuator:
-    enabled: true
-  health:
-    enabled: true
-  info: 
-    id: info
-    sensitive: false
-    enabled: true
+#endpoints:
+#  actuator:
+#    enabled: true
+#  health:
+#    enabled: true
+#  info: 
+#    id: info
+#    sensitive: false
+#    enabled: true
     
-management:
-  port: 0
-  address: 127.0.0.1
+#management:
+#  port: 0
+#  address: 127.0.0.1
 #  context-path: /details
 #  security:
 #    enabled: true

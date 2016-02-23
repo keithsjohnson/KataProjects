@@ -16,4 +16,4 @@ include 'api'
 include 'services:webservice'
 */
 
-rootProject.name = 'uk.co.keithsjohnson.springboot.eureka.client'
+rootProject.name = 'uk.co.keithsjohnson.springboot.hystrix.dashboard'

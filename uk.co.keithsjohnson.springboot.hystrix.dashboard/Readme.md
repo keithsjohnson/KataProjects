@@ -43,6 +43,21 @@ https://github.com/Netflix/Hystrix/tree/master/hystrix-contrib/hystrix-javanica#
 
 https://github.com/Netflix/Hystrix/wiki/Configuration
 
+http://localhost:9903/hystrix/index.html
+http://localhost:9903/hystrix/monitor
+
+http://localhost:9023/hystrix.stream
+
+
+http://localhost:8761/
+
+http://localhost:8092/accounts
+http://localhost:8090/hystrix.stream
+http://localhost:8091/hystrix.stream
+
+http://localhost:8090/userAccounts
+http://localhost:8090/health
+
 https://github.com/Netflix/Hystrix/wiki/How-it-Works#Isolation
 
 
