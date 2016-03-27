@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="in" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" >
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="in" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="13a81133-cefc-40e8-9df6-6006975d52f6">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
 	<style name="Title" fontSize="26"/>
 	<style name="Head" fontSize="12"/>
-	<field name="name" class="java.lang.String"/>
-	<field name="population" class="java.lang.Long"/>
+	<parameter name="xml_url" class="java.lang.String">
+		<defaultValueExpression><![CDATA["http://localhost:8080/report.xml"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="xPath">
+		<![CDATA[//city]]>
+	</queryString>
+	<field name="name" class="java.lang.String">
+		<fieldDescription><![CDATA[name]]></fieldDescription>
+	</field>
+	<field name="population" class="java.lang.Long">
+		<fieldDescription><![CDATA[population]]></fieldDescription>
+	</field>
 	<group name="Header">
 		<groupHeader>
 			<band height="45">
 				<staticText>
-					<reportElement style="Title" x="190" y="0" width="188" height="40" />
+					<reportElement style="Title" x="190" y="0" width="188" height="40" uuid="00ee3810-587f-4d09-af29-666fdc07ed08"/>
 					<text><![CDATA[City report]]></text>
 				</staticText>
 			</band>
@@ -19,13 +32,13 @@
 	</group>
 	<group name="username_group">
 		<groupHeader>
-			<band height="22" splitType="Stretch">
+			<band height="23" splitType="Stretch">
 				<staticText>
-					<reportElement style="Head" x="70" y="0" width="150" height="20" />
+					<reportElement style="Head" x="70" y="0" width="150" height="20" uuid="d277f183-2095-4ccf-85c6-7958348f2428"/>
 					<text><![CDATA[Name]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Head" x="230" y="0" width="148" height="20"  />
+					<reportElement style="Head" x="230" y="0" width="148" height="20" uuid="88ecde92-58be-4a48-9b13-9ca17a80f462"/>
 					<text><![CDATA[Population]]></text>
 				</staticText>
 			</band>
@@ -37,15 +50,15 @@
 	<detail>
 		<band height="21" splitType="Stretch">
 			<textField>
-				<reportElement x="70" y="0" width="150" height="20" />
+				<reportElement x="70" y="0" width="150" height="20" uuid="d5052e14-4228-4945-a01e-375fb67e566e"/>
 				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="230" y="0" width="148" height="20" />
+			<textField pattern="#,##0">
+				<reportElement x="230" y="0" width="148" height="20" uuid="91925e04-88f6-4903-87ea-b94390c81609"/>
 				<textFieldExpression><![CDATA[$F{population}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement positionType="FixRelativeToBottom" x="3" y="12" width="555" height="1" />
+				<reportElement positionType="FixRelativeToBottom" x="3" y="12" width="555" height="1" uuid="25885513-e02b-4e43-9d28-546f53dadb80"/>
 				<graphicElement>
 					<pen lineWidth="0.5" lineColor="#999999"/>
 				</graphicElement>

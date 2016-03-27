@@ -1,5 +1,6 @@
 package uk.co.keithsjohnson.jasperreports.service;
 
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,7 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRXmlDataSource;
 import uk.co.keithsjohnson.jasperreports.model.City;
 import uk.co.keithsjohnson.jasperreports.model.Country;
 import uk.co.keithsjohnson.jasperreports.report.CustomJRDataSource;
@@ -39,15 +41,31 @@ public class ApiService {
 		JasperReport jasperReport;
 		JasperPrint jasperPrint;
 		try {
-			jasperReport = JasperCompileManager
-					.compileReport("src/main/resources/static/report.jrxml");
-			CustomJRDataSource<City> dataSource = new CustomJRDataSource<City>()
-					.initBy(cities);
-			jasperPrint = JasperFillManager.fillReport(jasperReport, new HashMap(),
-					dataSource);
-			JasperExportManager.exportReportToPdfFile(jasperPrint,
-					"src/main/resources/static/report.pdf");
+			jasperReport = JasperCompileManager.compileReport("src/main/resources/static/report.jrxml");
+			CustomJRDataSource<City> dataSource = new CustomJRDataSource<City>().initBy(cities);
+			jasperPrint = JasperFillManager.fillReport(jasperReport, new HashMap<String, Object>(), dataSource);
+			JasperExportManager.exportReportToPdfFile(jasperPrint, "src/main/resources/static/report.pdf");
 		} catch (JRException e) {
+			throw new RuntimeException(e);
+		}
+
+		try {
+			jasperReport = JasperCompileManager.compileReport("src/main/resources/static/XMLDSReport.jrxml");
+			JRXmlDataSource dataSource = new JRXmlDataSource(
+					new FileInputStream("src/main/resources/static/simple.xml"), "/breakfast_menu/food");
+			jasperPrint = JasperFillManager.fillReport(jasperReport, new HashMap<String, Object>(), dataSource);
+			JasperExportManager.exportReportToPdfFile(jasperPrint, "src/main/resources/static/simplereport.pdf");
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
+		try {
+			jasperReport = JasperCompileManager.compileReport("src/main/resources/static/report.jrxml");
+			JRXmlDataSource dataSource = new JRXmlDataSource(
+					new FileInputStream("src/main/resources/static/report.xml"), "/cities/city");
+			jasperPrint = JasperFillManager.fillReport(jasperReport, new HashMap<String, Object>(), dataSource);
+			JasperExportManager.exportReportToPdfFile(jasperPrint, "src/main/resources/static/xmlreport.pdf");
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}

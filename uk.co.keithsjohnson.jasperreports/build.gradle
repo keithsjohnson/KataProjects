@@ -37,6 +37,8 @@ dependencies {
 	compile('net.sf.jasperreports:jasperreports:6.2.0')
 	compile('com.lowagie:itext:2.1.7')
 	compile('org.olap4j:olap4j:1.1.0')
+	compile('xalan:xalan:2.7.2')
+	
 	testCompile('org.springframework.boot:spring-boot-starter-test') 
 }
 

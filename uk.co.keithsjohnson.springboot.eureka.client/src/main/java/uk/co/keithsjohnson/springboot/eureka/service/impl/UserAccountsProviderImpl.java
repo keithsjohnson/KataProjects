@@ -5,11 +5,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
@@ -20,8 +19,7 @@ import uk.co.keithsjohnson.springboot.eureka.api.model.User;
 import uk.co.keithsjohnson.springboot.eureka.api.model.UserAccounts;
 import uk.co.keithsjohnson.springboot.eureka.service.api.UserAccountsProvider;
 
-@Component
-@EnableCircuitBreaker
+@Service
 public class UserAccountsProviderImpl implements UserAccountsProvider {
 
 	@Autowired
