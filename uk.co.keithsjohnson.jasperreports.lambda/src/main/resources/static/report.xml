@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cities>
+	<city>
+		<name>New York</name>
+		<population>12000000</population>
+	</city>
+	<city>
+		<name>Manchester</name>
+		<population>1000000</population>
+	</city>
+	<city>
+		<name>Stoke</name>
+		<population>123456</population>
+	</city>
+</cities>

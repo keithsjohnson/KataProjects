@@ -1,4 +1,5 @@
 include ":uk.co.keithsjohnson.jasperreports"
+include ":uk.co.keithsjohnson.jasperreports.lambda"
 include ":uk.co.keithsjohnson.springboot.accounts"
 include ":uk.co.keithsjohnson.springboot.circuitbreaker"
 include ":uk.co.keithsjohnson.springboot.eureka"

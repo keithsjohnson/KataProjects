@@ -1,0 +1,63 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+version = '1.0'
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Quickstart',
+                   'Implementation-Version': version
+    }
+}
+
+repositories {
+    mavenLocal()
+	mavenCentral()
+	maven { url "http://repository.pentaho.org/artifactory/repo/" }
+    maven { url "https://repo.spring.io/libs-release" }
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    compile("com.amazonaws:aws-lambda-java-core:1.0.0")
+    compile("com.amazonaws:aws-lambda-java-events:1.1.0")
+    
+	compile('net.sf.jasperreports:jasperreports:6.2.0')
+	compile('com.lowagie:itext:2.1.7')
+	compile('org.olap4j:olap4j:1.1.0')
+	compile('xalan:xalan:2.7.2')
+	compile('commons-io:commons-io:2.4')
+	
+    
+    testCompile group: 'junit', name: 'junit', version: '4.+'
+    
+    testCompile group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
+}
+
+test {
+    systemProperties 'property': 'value'
+}
+
+uploadArchives {
+    repositories {
+       flatDir {
+           dirs 'repos'
+       }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'jars', include: '*.jar')
+}
+
+task buildZip(type: Zip) {
+    from compileJava
+    from processResources              
+    into('lib') {
+        from configurations.runtime
+    }           
+}
+
+build.dependsOn buildZip
+
