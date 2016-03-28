@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<cities>
+<report>
 	<city>
 		<name>New York</name>
 		<population>12000000</population>
@@ -36,4 +36,4 @@
 		<name>Kidsgrove</name>
 		<population>123456</population>
 	</city>
-</cities>
+</report>

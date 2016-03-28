@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<report>
+<report type="s3" jrxml-location="jasperreports-jrxml" jrxml="report.jrxml" pdf-location="jasperreports-generated-pdf" pdf="report.pdf">
 	<city>
 		<name>New York</name>
 		<population>12000000</population>
