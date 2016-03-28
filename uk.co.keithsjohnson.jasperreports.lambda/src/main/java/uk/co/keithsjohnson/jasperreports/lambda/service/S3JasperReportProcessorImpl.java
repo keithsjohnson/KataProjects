@@ -26,6 +26,8 @@ public class S3JasperReportProcessorImpl {
 
 	private final static String REPORT_JRXML = "report.jrxml";
 
+	private final static String CITIES_SELECT_EXPRESSION = "/report/city";
+
 	private final AmazonS3 s3Client;
 
 	public S3JasperReportProcessorImpl() {
@@ -48,6 +50,7 @@ public class S3JasperReportProcessorImpl {
 		String jrxmlLocation = JRXML_S3_BUCKET;
 		String jrxmlName = REPORT_JRXML;
 		String pdfLocation = GENERATED_PDF_S3_BUCKET;
+		String xmlSelectExpression = CITIES_SELECT_EXPRESSION;
 
 		String jrxmlContents = getFileContentsFromS3AsString(s3Client, jrxmlLocation, jrxmlName, context);
 		context.getLogger().log(jrxmlContents);
@@ -55,7 +58,7 @@ public class S3JasperReportProcessorImpl {
 		String pdfName = xmlName.substring(0, xmlName.length() - 4) + "-" + UUID.randomUUID().toString() + ".pdf";
 
 		JasperReportRequestModel jasperReportRequestModel = new JasperReportRequestModel(xmlLocation, xmlName,
-				xmlContents, jrxmlLocation, jrxmlName, jrxmlContents, pdfLocation, pdfName);
+				xmlContents, xmlSelectExpression, jrxmlLocation, jrxmlName, jrxmlContents, pdfLocation, pdfName);
 
 		return jasperReportRequestModel;
 	}

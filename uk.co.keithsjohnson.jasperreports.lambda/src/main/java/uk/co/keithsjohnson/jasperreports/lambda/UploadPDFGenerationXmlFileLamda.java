@@ -42,8 +42,6 @@ public class UploadPDFGenerationXmlFileLamda {
 
 		context.getLogger().log(s3event.toJson());
 		context.getLogger().log("-----------------------------------");
-		context.getLogger().log(s3event.toString());
-		context.getLogger().log("-----------------------------------");
 
 		s3event.getRecords()
 				.stream()
@@ -65,20 +63,15 @@ public class UploadPDFGenerationXmlFileLamda {
 		JasperReportRequestModel jasperReportRequestModel = s3JasperReportProcessorImpl
 				.getJasperReportRequestModel(context, xmlLocation, xmlName);
 
-		InputStream xmlRequestDataInputStream = getInputStreamFromString(jasperReportRequestModel.getXmlContents());
-		context.getLogger().log("-----------------------------------");
-
-		InputStream jrxmlInputStream = getInputStreamFromString(jasperReportRequestModel.getJrxmlContents());
-
-		byte[] pdfBytes = jasperReportProcessorImpl.generatePdfReportAsBytes(jrxmlInputStream,
-				xmlRequestDataInputStream, CITIES_SELECT_EXPRESSION);
-		context.getLogger().log("-----------------------------------");
+		byte[] pdfBytes = jasperReportProcessorImpl.processJasperReportRequest(jasperReportRequestModel);
 
 		s3JasperReportProcessorImpl.writePdf(jasperReportRequestModel, pdfBytes);
 
-		s3JasperReportProcessorImpl.deleteXmlFile(xmlLocation, xmlName);
+		s3JasperReportProcessorImpl.deleteXmlFile(jasperReportRequestModel.getXmlLocation(),
+				jasperReportRequestModel.getXmlName());
 
-		context.getLogger().log("END: " + getNowAsFormatedUKDateTimeString());
+		context.getLogger()
+				.log("END: " + jasperReportRequestModel.getPdfName() + " at " + getNowAsFormatedUKDateTimeString());
 		context.getLogger().log("-----------------------------------");
 		return "OK";
 	}

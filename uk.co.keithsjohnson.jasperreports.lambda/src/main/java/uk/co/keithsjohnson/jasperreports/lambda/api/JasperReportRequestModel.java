@@ -8,6 +8,8 @@ public class JasperReportRequestModel {
 
 	private String xmlContents;
 
+	private String xmlSelectExpression;
+
 	private String jrxmlLocation;
 
 	private String jrxmlName;
@@ -18,12 +20,13 @@ public class JasperReportRequestModel {
 
 	private String pdfName;
 
-	public JasperReportRequestModel(String xmlLocation, String xmlName, String xmlContents, String jrxmlLocation,
-			String jrxmlName, String jrxmlContents, String pdfLocation, String pdfName) {
+	public JasperReportRequestModel(String xmlLocation, String xmlName, String xmlContents, String xmlSelectExpression,
+			String jrxmlLocation, String jrxmlName, String jrxmlContents, String pdfLocation, String pdfName) {
 		super();
 		this.xmlLocation = xmlLocation;
 		this.xmlName = xmlName;
 		this.xmlContents = xmlContents;
+		this.xmlSelectExpression = xmlSelectExpression;
 		this.jrxmlLocation = jrxmlLocation;
 		this.jrxmlName = jrxmlName;
 		this.jrxmlContents = jrxmlContents;
@@ -37,6 +40,10 @@ public class JasperReportRequestModel {
 
 	public String getXmlName() {
 		return xmlName;
+	}
+
+	public String getXmlSelectExpression() {
+		return xmlSelectExpression;
 	}
 
 	public String getXmlContents() {
@@ -66,8 +73,9 @@ public class JasperReportRequestModel {
 	@Override
 	public String toString() {
 		return "JasperReportRequestModel [xmlLocation=" + xmlLocation + ", xmlName=" + xmlName + ", xmlContents="
-				+ xmlContents + ", jrxmlLocation=" + jrxmlLocation + ", jrxmlName=" + jrxmlName + ", jrxmlContents="
-				+ jrxmlContents + ", pdfLocation=" + pdfLocation + ", pdfName=" + pdfName + "]";
+				+ xmlContents + ", xmlSelectExpression=" + xmlSelectExpression + ", jrxmlLocation=" + jrxmlLocation
+				+ ", jrxmlName=" + jrxmlName + ", jrxmlContents=" + jrxmlContents + ", pdfLocation=" + pdfLocation
+				+ ", pdfName=" + pdfName + "]";
 	}
 
 }
