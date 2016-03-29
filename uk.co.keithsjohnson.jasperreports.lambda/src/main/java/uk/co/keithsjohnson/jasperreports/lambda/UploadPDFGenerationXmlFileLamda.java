@@ -1,39 +1,36 @@
 package uk.co.keithsjohnson.jasperreports.lambda;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-
-import org.apache.commons.io.IOUtils;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.events.S3Event;
 import com.amazonaws.services.s3.event.S3EventNotification.S3EventNotificationRecord;
 
+import uk.co.keithsjohnson.jasperreports.lambda.api.JasperReportIOProcessor;
 import uk.co.keithsjohnson.jasperreports.lambda.api.JasperReportRequestModel;
-import uk.co.keithsjohnson.jasperreports.lambda.service.FileJasperReportProcessorImpl;
-import uk.co.keithsjohnson.jasperreports.lambda.service.JasperReportProcessorImpl;
-import uk.co.keithsjohnson.jasperreports.lambda.service.S3JasperReportProcessorImpl;
+import uk.co.keithsjohnson.jasperreports.lambda.service.JasperReportCreatorImpl;
+import uk.co.keithsjohnson.jasperreports.lambda.service.JasperReportXmlDataProcessor;
+import uk.co.keithsjohnson.jasperreports.lambda.service.S3JasperReportIOProcessorImpl;
 
 public class UploadPDFGenerationXmlFileLamda {
 
-	private final static String CITIES_SELECT_EXPRESSION = "/report/city";
+	private static final String DD_MMM_YYYY_HH_MM_SS_S = "dd MMM yyyy HH:mm:ss.S";
 
-	private final S3JasperReportProcessorImpl s3JasperReportProcessorImpl;
+	private static final String EUROPE_LONDON_TIMEZONE = "Europe/London";
 
-	private final JasperReportProcessorImpl jasperReportProcessorImpl;
+	private final JasperReportIOProcessor jasperReportProcessor;
 
-	private final FileJasperReportProcessorImpl fileJasperReportProcessorImpl;
+	private final JasperReportCreatorImpl jasperReportCreatorImpl;
 
 	public UploadPDFGenerationXmlFileLamda() {
-		s3JasperReportProcessorImpl = new S3JasperReportProcessorImpl();
-		jasperReportProcessorImpl = new JasperReportProcessorImpl();
-		fileJasperReportProcessorImpl = new FileJasperReportProcessorImpl();
+		jasperReportProcessor = new S3JasperReportIOProcessorImpl(new JasperReportXmlDataProcessor());
+		jasperReportCreatorImpl = new JasperReportCreatorImpl();
 	}
 
-	private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm:ss.S");
+	private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DD_MMM_YYYY_HH_MM_SS_S);
 
 	public String handleUploadPDFGenerationXmlFile(S3Event s3event, Context context) throws IOException {
 
@@ -60,46 +57,27 @@ public class UploadPDFGenerationXmlFileLamda {
 		context.getLogger().log("xmlLocation=" + xmlLocation + ", xmlName=" + xmlName);
 		context.getLogger().log("-----------------------------------");
 
-		JasperReportRequestModel jasperReportRequestModel = s3JasperReportProcessorImpl
-				.getJasperReportRequestModel(context, xmlLocation, xmlName);
+		JasperReportRequestModel jasperReportRequestModel = jasperReportProcessor
+				.getJasperReportRequestModel(xmlLocation, xmlName);
+		context.getLogger().log(jasperReportRequestModel.toString());
+		context.getLogger().log("-----------------------------------");
 
-		byte[] pdfBytes = jasperReportProcessorImpl.processJasperReportRequest(jasperReportRequestModel);
+		byte[] pdfBytes = jasperReportCreatorImpl.processJasperReportRequest(jasperReportRequestModel);
 
-		s3JasperReportProcessorImpl.writePdf(jasperReportRequestModel, pdfBytes);
+		jasperReportProcessor.writePdf(jasperReportRequestModel, pdfBytes);
 
-		s3JasperReportProcessorImpl.deleteXmlFile(jasperReportRequestModel.getXmlLocation(),
+		jasperReportProcessor.deleteXmlFile(jasperReportRequestModel.getXmlLocation(),
 				jasperReportRequestModel.getXmlName());
 
-		context.getLogger()
-				.log("END: " + jasperReportRequestModel.getPdfName() + " at " + getNowAsFormatedUKDateTimeString());
+		String endMessage = "END: " + jasperReportRequestModel.getJasperReportXmlDataModel().getPdfNameWithUUID()
+				+ " at " + getNowAsFormatedUKDateTimeString();
+		context.getLogger().log(endMessage);
 		context.getLogger().log("-----------------------------------");
 		return "OK";
 	}
 
 	protected String getNowAsFormatedUKDateTimeString() {
-		return LocalDateTime.now(ZoneId.of("Europe/London")).format(formatter);
+		return LocalDateTime.now(ZoneId.of(EUROPE_LONDON_TIMEZONE)).format(formatter);
 	}
 
-	public void generateReport() {
-		String inputJRXMLFilename = "src/main/resources/static/report.jrxml";
-		String inputXMLDataFilename = "src/main/resources/static/report.xml";
-		String outputPDFFilename = "src/main/resources/static/report.pdf";
-
-		InputStream jrxmlInputStream = fileJasperReportProcessorImpl.getJRXMLInputStream(inputJRXMLFilename);
-		InputStream xmlRequestDataInputStream = fileJasperReportProcessorImpl
-				.getXMLDataInputStream(inputXMLDataFilename);
-
-		byte[] pdfBytes = jasperReportProcessorImpl.generatePdfReportAsBytes(jrxmlInputStream,
-				xmlRequestDataInputStream, CITIES_SELECT_EXPRESSION);
-
-		fileJasperReportProcessorImpl.writeGeneratedPdfToFile(outputPDFFilename, pdfBytes);
-	}
-
-	protected InputStream getInputStreamFromString(String content) {
-		try {
-			return IOUtils.toInputStream(content, "UTF-8");
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
 }

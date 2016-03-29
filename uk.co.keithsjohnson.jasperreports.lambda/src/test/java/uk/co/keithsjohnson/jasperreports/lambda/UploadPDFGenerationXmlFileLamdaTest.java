@@ -9,13 +9,13 @@ import org.junit.Test;
 
 public class UploadPDFGenerationXmlFileLamdaTest {
 
-	private UploadPDFGenerationXmlFileLamda testSubject;
+	private PDFGenerator testSubject;
 
 	private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm:ss.S");
 
 	@Before
 	public void setUp() {
-		testSubject = new UploadPDFGenerationXmlFileLamda();
+		testSubject = new PDFGenerator();
 	}
 
 	@Test

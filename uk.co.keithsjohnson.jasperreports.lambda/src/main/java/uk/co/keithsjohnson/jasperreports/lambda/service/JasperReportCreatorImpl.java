@@ -15,15 +15,17 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRXmlDataSource;
 import uk.co.keithsjohnson.jasperreports.lambda.api.JasperReportRequestModel;
 
-public class JasperReportProcessorImpl {
+public class JasperReportCreatorImpl {
+
+	private static final String UTF_8 = "UTF-8";
 
 	public byte[] processJasperReportRequest(JasperReportRequestModel jasperReportRequestModel) {
 		InputStream xmlRequestDataInputStream = getInputStreamFromString(jasperReportRequestModel.getXmlContents());
 
 		InputStream jrxmlInputStream = getInputStreamFromString(jasperReportRequestModel.getJrxmlContents());
 
-		return generatePdfReportAsBytes(jrxmlInputStream,
-				xmlRequestDataInputStream, jasperReportRequestModel.getXmlSelectExpression());
+		return generatePdfReportAsBytes(jrxmlInputStream, xmlRequestDataInputStream,
+				jasperReportRequestModel.getJasperReportXmlDataModel().getXmlSelectExpression());
 	}
 
 	public byte[] generatePdfReportAsBytes(InputStream jrxmlInputStream, InputStream xmlDataInputStream,
@@ -43,7 +45,7 @@ public class JasperReportProcessorImpl {
 
 	protected InputStream getInputStreamFromString(String content) {
 		try {
-			return IOUtils.toInputStream(content, "UTF-8");
+			return IOUtils.toInputStream(content, UTF_8);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

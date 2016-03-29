@@ -8,30 +8,18 @@ public class JasperReportRequestModel {
 
 	private String xmlContents;
 
-	private String xmlSelectExpression;
-
-	private String jrxmlLocation;
-
-	private String jrxmlName;
+	private JasperReportXmlDataModel jasperReportXmlDataModel;
 
 	private String jrxmlContents;
 
-	private String pdfLocation;
-
-	private String pdfName;
-
-	public JasperReportRequestModel(String xmlLocation, String xmlName, String xmlContents, String xmlSelectExpression,
-			String jrxmlLocation, String jrxmlName, String jrxmlContents, String pdfLocation, String pdfName) {
+	public JasperReportRequestModel(String xmlLocation, String xmlName, String xmlContents,
+			JasperReportXmlDataModel jasperReportXmlDataModel, String jrxmlContents) {
 		super();
 		this.xmlLocation = xmlLocation;
 		this.xmlName = xmlName;
 		this.xmlContents = xmlContents;
-		this.xmlSelectExpression = xmlSelectExpression;
-		this.jrxmlLocation = jrxmlLocation;
-		this.jrxmlName = jrxmlName;
+		this.jasperReportXmlDataModel = jasperReportXmlDataModel;
 		this.jrxmlContents = jrxmlContents;
-		this.pdfLocation = pdfLocation;
-		this.pdfName = pdfName;
 	}
 
 	public String getXmlLocation() {
@@ -42,40 +30,23 @@ public class JasperReportRequestModel {
 		return xmlName;
 	}
 
-	public String getXmlSelectExpression() {
-		return xmlSelectExpression;
-	}
-
 	public String getXmlContents() {
 		return xmlContents;
 	}
 
-	public String getJrxmlLocation() {
-		return jrxmlLocation;
-	}
-
-	public String getJrxmlName() {
-		return jrxmlName;
+	public JasperReportXmlDataModel getJasperReportXmlDataModel() {
+		return jasperReportXmlDataModel;
 	}
 
 	public String getJrxmlContents() {
 		return jrxmlContents;
 	}
 
-	public String getPdfLocation() {
-		return pdfLocation;
-	}
-
-	public String getPdfName() {
-		return pdfName;
-	}
-
 	@Override
 	public String toString() {
 		return "JasperReportRequestModel [xmlLocation=" + xmlLocation + ", xmlName=" + xmlName + ", xmlContents="
-				+ xmlContents + ", xmlSelectExpression=" + xmlSelectExpression + ", jrxmlLocation=" + jrxmlLocation
-				+ ", jrxmlName=" + jrxmlName + ", jrxmlContents=" + jrxmlContents + ", pdfLocation=" + pdfLocation
-				+ ", pdfName=" + pdfName + "]";
+				+ xmlContents + ", jasperReportXmlDataModel=" + jasperReportXmlDataModel.toString() + ", jrxmlContents="
+				+ jrxmlContents + "]";
 	}
 
 }
