@@ -17,9 +17,12 @@ public class PDFGenerator {
 	}
 
 	public void generateReport() {
-		String xmlLocation = "src/main/resources/static";
-		String xmlName = "file-report.xml";
+		createXmlFileReport("src/main/resources/static", "file-report.xml");
 
+		createXmlFileReport("src/main/resources/static", "file-simple.xml");
+	}
+
+	protected void createXmlFileReport(String xmlLocation, String xmlName) {
 		JasperReportRequestModel jasperReportRequestModel = jasperReportIOProcessor
 				.getJasperReportRequestModel(xmlLocation, xmlName);
 		System.out.println(jasperReportRequestModel.toString());

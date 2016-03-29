@@ -27,7 +27,6 @@ public class JasperReportXmlDataProcessor {
 			Document xmlDocument = dBuilder.parse(is);
 
 			NodeList reportNodeList = xmlDocument.getElementsByTagName("report");
-			System.out.println(reportNodeList.getLength());
 
 			Element reportElement = (Element) reportNodeList.item(0);
 
