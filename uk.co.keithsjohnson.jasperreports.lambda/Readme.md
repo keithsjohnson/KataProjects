@@ -82,6 +82,11 @@ Timeout: 1 min
 VPC: No VPC
 Upload file: build/distributions/uk.co.keithsjohnson.jasperreports.lambda-1.0.zip
 
+
+Name: PDFGenerationJSONStringLamda
+Handler: uk.co.keithsjohnson.jasperreports.lambda.UploadPDFGenerationXmlFileLamda::handleUploadPDFGenerationJSONString
+... as above example
+
 Note:
 -----
 Can also be used locally from JUnit using PDFGeneratorTest.java
@@ -95,3 +100,5 @@ Make more flexible to not rely on top level report xml element.
 Try more detailed Jasper Reports - they are very simple at the moment.
 
 Cache compiled jrxml reports to help with performance.
+
+Need to add return of PDF in JSON result.

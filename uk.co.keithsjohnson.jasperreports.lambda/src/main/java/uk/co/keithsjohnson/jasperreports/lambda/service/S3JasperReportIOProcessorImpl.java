@@ -35,6 +35,16 @@ public class S3JasperReportIOProcessorImpl implements JasperReportIOProcessor {
 
 		String xmlContents = getFileContentsFromS3AsString(xmlLocation, xmlName);
 
+		return getXmlContentsForLocationAndName(xmlLocation, xmlName, xmlContents);
+	}
+
+	@Override
+	public JasperReportRequestModel getXmlContentsForString(String xmlContents) {
+		return getXmlContentsForLocationAndName(null, null, xmlContents);
+	}
+
+	protected JasperReportRequestModel getXmlContentsForLocationAndName(String xmlLocation, String xmlName,
+			String xmlContents) {
 		JasperReportXmlDataModel jasperReportXmlDataModel = jasperReportXmlDataProcessor
 				.getJasperReportXmlDataModelForRequest(xmlContents);
 

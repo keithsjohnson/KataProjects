@@ -25,19 +25,31 @@ public class FileJasperReportIOProcessorImpl implements JasperReportIOProcessor 
 		try {
 			String xmlContents = getStringContentsForFilename(xmlLocation + "/" + xmlName);
 
-			JasperReportXmlDataModel jasperReportXmlDataModel = jasperReportXmlDataProcessor
-					.getJasperReportXmlDataModelForRequest(xmlContents);
-
-			String jrxmlContents = getStringContentsForFilename(
-					jasperReportXmlDataModel.getJrxmlLocation() + "/" + jasperReportXmlDataModel.getJrxmlName());
-
-			JasperReportRequestModel jasperReportRequestModel = new JasperReportRequestModel(xmlLocation, xmlName,
-					xmlContents, jasperReportXmlDataModel, jrxmlContents);
+			JasperReportRequestModel jasperReportRequestModel = getXmlContentsForLocationAndName(xmlLocation, xmlName,
+					xmlContents);
 
 			return jasperReportRequestModel;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	public JasperReportRequestModel getXmlContentsForString(String xmlContents) {
+		return getXmlContentsForLocationAndName(null, null, xmlContents);
+	}
+
+	protected JasperReportRequestModel getXmlContentsForLocationAndName(String xmlLocation, String xmlName,
+			String xmlContents) {
+		JasperReportXmlDataModel jasperReportXmlDataModel = jasperReportXmlDataProcessor
+				.getJasperReportXmlDataModelForRequest(xmlContents);
+
+		String jrxmlContents = getStringContentsForFilename(
+				jasperReportXmlDataModel.getJrxmlLocation() + "/" + jasperReportXmlDataModel.getJrxmlName());
+
+		JasperReportRequestModel jasperReportRequestModel = new JasperReportRequestModel(xmlLocation, xmlName,
+				xmlContents, jasperReportXmlDataModel, jrxmlContents);
+		return jasperReportRequestModel;
 	}
 
 	@Override

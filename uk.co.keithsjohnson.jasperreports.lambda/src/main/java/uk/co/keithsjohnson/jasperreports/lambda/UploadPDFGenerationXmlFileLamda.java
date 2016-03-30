@@ -4,12 +4,16 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.events.S3Event;
 import com.amazonaws.services.s3.event.S3EventNotification.S3EventNotificationRecord;
 
 import uk.co.keithsjohnson.jasperreports.lambda.api.JasperReportIOProcessor;
+import uk.co.keithsjohnson.jasperreports.lambda.api.JasperReportJSONRequest;
+import uk.co.keithsjohnson.jasperreports.lambda.api.JasperReportJSONResponse;
 import uk.co.keithsjohnson.jasperreports.lambda.api.JasperReportRequestModel;
 import uk.co.keithsjohnson.jasperreports.lambda.service.JasperReportCreatorImpl;
 import uk.co.keithsjohnson.jasperreports.lambda.service.JasperReportXmlDataProcessor;
@@ -48,6 +52,26 @@ public class UploadPDFGenerationXmlFileLamda {
 		return "OK";
 	}
 
+	public JasperReportJSONResponse handleUploadPDFGenerationJSONString(JasperReportJSONRequest jasperReportJSONRequest,
+			final Context context) {
+		String[] xmlDataArray = jasperReportJSONRequest.getXmlRequestData();
+
+		List<String> xmlDataList = Arrays.asList(xmlDataArray);
+
+		String[] pdfFilename = xmlDataList
+				.stream()
+				.map(xmlData -> processXmlData(context, xmlData))
+				.toArray(String[]::new);
+
+		return new JasperReportJSONResponse(pdfFilename);
+	}
+
+	protected String processXmlData(Context context, String xmlData) {
+		context.getLogger().log(xmlData);
+		JasperReportRequestModel jasperReportRequestModel = jasperReportProcessor.getXmlContentsForString(xmlData);
+		return processJasperReportRequestModel(context, jasperReportRequestModel);
+	}
+
 	protected String processS3EventNotificationRecord(S3EventNotificationRecord s3EventNotificationRecord,
 			Context context) {
 
@@ -59,6 +83,15 @@ public class UploadPDFGenerationXmlFileLamda {
 
 		JasperReportRequestModel jasperReportRequestModel = jasperReportProcessor
 				.getJasperReportRequestModel(xmlLocation, xmlName);
+
+		jasperReportProcessor.deleteXmlFile(jasperReportRequestModel.getXmlLocation(),
+				jasperReportRequestModel.getXmlName());
+
+		return processJasperReportRequestModel(context, jasperReportRequestModel);
+	}
+
+	protected String processJasperReportRequestModel(Context context,
+			JasperReportRequestModel jasperReportRequestModel) {
 		context.getLogger().log(jasperReportRequestModel.toString());
 		context.getLogger().log("-----------------------------------");
 
@@ -66,14 +99,11 @@ public class UploadPDFGenerationXmlFileLamda {
 
 		jasperReportProcessor.writePdf(jasperReportRequestModel, pdfBytes);
 
-		jasperReportProcessor.deleteXmlFile(jasperReportRequestModel.getXmlLocation(),
-				jasperReportRequestModel.getXmlName());
-
 		String endMessage = "END: " + jasperReportRequestModel.getJasperReportXmlDataModel().getPdfNameWithUUID()
 				+ " at " + getNowAsFormatedUKDateTimeString();
 		context.getLogger().log(endMessage);
 		context.getLogger().log("-----------------------------------");
-		return "OK";
+		return jasperReportRequestModel.getJasperReportXmlDataModel().getPdfNameWithUUID();
 	}
 
 	protected String getNowAsFormatedUKDateTimeString() {
