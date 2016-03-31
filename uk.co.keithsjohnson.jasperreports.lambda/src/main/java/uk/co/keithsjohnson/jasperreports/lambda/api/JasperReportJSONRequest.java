@@ -1,27 +1,25 @@
 package uk.co.keithsjohnson.jasperreports.lambda.api;
 
-import java.util.Arrays;
-
 public class JasperReportJSONRequest {
-	private String[] xmlRequestData;
+	private String xmlRequest;
 
 	public JasperReportJSONRequest() {
 	}
 
-	public JasperReportJSONRequest(String[] xmlRequestData) {
-		this.xmlRequestData = xmlRequestData;
+	public JasperReportJSONRequest(String xmlRequest) {
+		this.xmlRequest = xmlRequest;
 	}
 
-	public String[] getXmlRequestData() {
-		return xmlRequestData;
+	public String getXmlRequest() {
+		return xmlRequest;
 	}
 
-	public void setXmlRequestData(String[] xmlRequestData) {
-		this.xmlRequestData = xmlRequestData;
+	public void setXmlRequest(String xmlRequest) {
+		this.xmlRequest = xmlRequest;
 	}
 
 	@Override
 	public String toString() {
-		return "JasperReportJSONRequest [xmlRequestData=" + Arrays.toString(xmlRequestData) + "]";
+		return "JasperReportJSONRequest [xmlRequest=" + xmlRequest + "]";
 	}
 }

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,6 +15,7 @@ import com.amazonaws.services.s3.event.S3EventNotification.S3EventNotificationRe
 
 import uk.co.keithsjohnson.jasperreports.lambda.api.JasperReportIOProcessor;
 import uk.co.keithsjohnson.jasperreports.lambda.api.JasperReportJSONRequest;
+import uk.co.keithsjohnson.jasperreports.lambda.api.JasperReportJSONRequestList;
 import uk.co.keithsjohnson.jasperreports.lambda.api.JasperReportJSONResponse;
 import uk.co.keithsjohnson.jasperreports.lambda.api.JasperReportJSONResponseList;
 import uk.co.keithsjohnson.jasperreports.lambda.api.JasperReportRequestModel;
@@ -57,22 +57,24 @@ public class UploadPDFGenerationXmlFileLamda {
 	}
 
 	public JasperReportJSONResponseList handleUploadPDFGenerationJSONString(
-			JasperReportJSONRequest jasperReportJSONRequest, final Context context) {
-		String[] xmlDataArray = jasperReportJSONRequest.getXmlRequestData();
+			JasperReportJSONRequestList jasperReportJSONRequestList, final Context context) {
 
-		List<String> xmlDataList = Arrays.asList(xmlDataArray);
+		context.getLogger().log(jasperReportJSONRequestList.toString());
 
-		List<JasperReportJSONResponse> jasperReportJSONResponseList = xmlDataList
+		List<JasperReportJSONRequest> xmlRequestDataList = jasperReportJSONRequestList.getXmlRequestData();
+
+		List<JasperReportJSONResponse> jasperReportJSONResponseList = xmlRequestDataList
 				.stream()
-				.map(xmlData -> processXmlData(context, xmlData))
+				.map(xmlRequest -> processXmlData(context, xmlRequest))
 				.collect(Collectors.toList());
 
 		return new JasperReportJSONResponseList(jasperReportJSONResponseList);
 	}
 
-	protected JasperReportJSONResponse processXmlData(Context context, String xmlData) {
-		context.getLogger().log(xmlData);
-		JasperReportRequestModel jasperReportRequestModel = jasperReportProcessor.getXmlContentsForString(xmlData);
+	protected JasperReportJSONResponse processXmlData(Context context, JasperReportJSONRequest xmlRequest) {
+		context.getLogger().log(xmlRequest.getXmlRequest());
+		JasperReportRequestModel jasperReportRequestModel = jasperReportProcessor
+				.getXmlContentsForString(xmlRequest.getXmlRequest());
 		return processJasperReportRequestModel(context, jasperReportRequestModel);
 	}
 

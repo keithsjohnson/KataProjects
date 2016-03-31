@@ -141,3 +141,181 @@ HTML:
 
 </body>
 </html>
+
+Example Request JSON
+{
+  "xmlRequestData":
+    [ "<?xml version=\"1.0\" encoding=\"UTF-8\"?><report type=\"s3\" xml-select-expression=\"/report/city\" jrxml-location=\"jasperreports-jrxml\" jrxml=\"report.jrxml\" pdf-location=\"jasperreports-generated-pdf\" pdf=\"s3-report.pdf\"><city><name>New York</name><population>12000000</population></city><city><name>Manchester</name><population>1000000</population></city><city><name>Stoke</name><population>123456</population></city></report>",
+      "<?xml version=\"1.0\" encoding=\"UTF-8\"?><report type=\"s3\" xml-select-expression=\"/report/city\" jrxml-location=\"jasperreports-jrxml\" jrxml=\"report.jrxml\" pdf-location=\"jasperreports-generated-pdf\" pdf=\"s3-report.pdf\"><city><name>New York</name><population>12000000</population></city><city><name>Manchester</name><population>1000000</population></city><city><name>Stoke</name><population>123456</population></city></report>"
+    ]
+}
+
+{
+  "xmlRequestData": [
+    { 
+      "xmlRequest" : "<?xml version=\"1.0\" encoding=\"UTF-8\"?><report type=\"s3\" xml-select-expression=\"/report/city\" jrxml-location=\"jasperreports-jrxml\" jrxml=\"report.jrxml\" pdf-location=\"jasperreports-generated-pdf\" pdf=\"s3-report.pdf\"><city><name>New York</name><population>12000000</population></city><city><name>Manchester</name><population>1000000</population></city><city><name>Stoke</name><population>123456</population></city></report>"
+    },
+    {
+      "xmlRequest" : "<?xml version=\"1.0\" encoding=\"UTF-8\"?><report type=\"s3\" xml-select-expression=\"/report/city\" jrxml-location=\"jasperreports-jrxml\" jrxml=\"report.jrxml\" pdf-location=\"jasperreports-generated-pdf\" pdf=\"s3-report.pdf\"><city><name>New York</name><population>12000000</population></city><city><name>Manchester</name><population>1000000</population></city><city><name>Stoke</name><population>123456</population></city></report>"
+    }
+  ]
+}
+
+
+Example Result JSON
+{
+  "report": [
+    {
+      "pdfFilename": "s3-report-517c3953-6caa-407e-855e-5532d8cc850d.pdf",
+      "pdfBase64String": "JVBERi0xLjQKJeLjz9MKMyAwIG9iago8PC9GaWx0ZXIvRmxhdGVEZWNvZGUvTGVuZ3RoIDI3OD4+c3RyZWFtCnicrZJNSwMxEIbv8yvmWKGsk+zmY6+KCoKiNhcRD0sba223W9eV4r83We22Fo0tDSHJkLyTZ+Ylr3BiIJWoSaIZwZmBW+B46U8Zkht+1RlHU8LxOUNGaJ6gd2RevHYtIRyWm0ncCZVWiVarTC59JrX39Rh6p5PmA2u7qOrGv0Y4/uXFh0e3j9qK/mblDiVEomVXJP+Jui5KeyCDi/8gN9XifVY0k2oeoZ00S9SW5xvt2CXeV/U0RktBEON9IvJzJxQlApdO5iOJq3l30WlSx2NOVIJQ+juewWB3W1gaqPaqmA+f7Vtj6xjGBFEsui+M1r608T6+yJwHih001TTG9w9TGE/7mZCxDJE67wz5ircM+QRaVfRfCmVuZHN0cmVhbQplbmRvYmoKMSAwIG9iago8PC9UYWJzL1MvR3JvdXA8PC9TL1RyYW5zcGFyZW5jeS9UeXBlL0dyb3VwL0NTL0RldmljZVJHQj4+L0NvbnRlbnRzIDMgMCBSL1R5cGUvUGFnZS9SZXNvdXJjZXM8PC9Db2xvclNwYWNlPDwvQ1MvRGV2aWNlUkdCPj4vUHJvY1NldCBbL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSV0vRm9udDw8L0YxIDIgMCBSPj4+Pi9QYXJlbnQgNCAwIFIvTWVkaWFCb3hbMCAwIDU5NSA4NDJdPj4KZW5kb2JqCjUgMCBvYmoKWzEgMCBSL1hZWiAwIDg1MiAwXQplbmRvYmoKMiAwIG9iago8PC9TdWJ0eXBlL1R5cGUxL1R5cGUvRm9udC9CYXNlRm9udC9IZWx2ZXRpY2EvRW5jb2RpbmcvV2luQW5zaUVuY29kaW5nPj4KZW5kb2JqCjQgMCBvYmoKPDwvS2lkc1sxIDAgUl0vVHlwZS9QYWdlcy9Db3VudCAxL0lUWFQoMi4xLjcpPj4KZW5kb2JqCjYgMCBvYmoKPDwvTmFtZXNbKEpSX1BBR0VfQU5DSE9SXzBfMSkgNSAwIFJdPj4KZW5kb2JqCjcgMCBvYmoKPDwvRGVzdHMgNiAwIFI+PgplbmRvYmoKOCAwIG9iago8PC9OYW1lcyA3IDAgUi9UeXBlL0NhdGFsb2cvUGFnZXMgNCAwIFIvVmlld2VyUHJlZmVyZW5jZXM8PC9QcmludFNjYWxpbmcvQXBwRGVmYXVsdD4+Pj4KZW5kb2JqCjkgMCBvYmoKPDwvTW9kRGF0ZShEOjIwMTYwMzMxMjE1NjM0WikvQ3JlYXRvcihKYXNwZXJSZXBvcnRzIExpYnJhcnkgdmVyc2lvbiA2LjIuMCkvQ3JlYXRpb25EYXRlKEQ6MjAxNjAzMzEyMTU2MzRaKS9Qcm9kdWNlcihpVGV4dCAyLjEuNyBieSAxVDNYVCk+PgplbmRvYmoKeHJlZgowIDEwCjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDM2MCAwMDAwMCBuIAowMDAwMDAwNjM2IDAwMDAwIG4gCjAwMDAwMDAwMTUgMDAwMDAgbiAKMDAwMDAwMDcyNCAwMDAwMCBuIAowMDAwMDAwNjAxIDAwMDAwIG4gCjAwMDAwMDA3ODcgMDAwMDAgbiAKMDAwMDAwMDg0MSAwMDAwMCBuIAowMDAwMDAwODczIDAwMDAwIG4gCjAwMDAwMDA5NzYgMDAwMDAgbiAKdHJhaWxlcgo8PC9JbmZvIDkgMCBSL0lEIFs8YzMyYTdmODY5ZDI0MzY2Mjk3MDIxMDkxYTAyNzFmZDE+PDhjNGI1ZWQ4OWNiYTk0NTMwYmRkMGNmZmJlYzNhN2QxPl0vUm9vdCA4IDAgUi9TaXplIDEwPj4Kc3RhcnR4cmVmCjExMzEKJSVFT0YK"
+    },
+    {
+      "pdfFilename": "s3-report-e56cd3e0-4b68-456f-ad2f-9e060473f8f9.pdf",
+      "pdfBase64String": "JVBERi0xLjQKJeLjz9MKMyAwIG9iago8PC9GaWx0ZXIvRmxhdGVEZWNvZGUvTGVuZ3RoIDI3OD4+c3RyZWFtCnicrZJNSwMxEIbv8yvmWKGsk+zmY6+KCoKiNhcRD0sba223W9eV4r83We22Fo0tDSHJkLyTZ+Ylr3BiIJWoSaIZwZmBW+B46U8Zkht+1RlHU8LxOUNGaJ6gd2RevHYtIRyWm0ncCZVWiVarTC59JrX39Rh6p5PmA2u7qOrGv0Y4/uXFh0e3j9qK/mblDiVEomVXJP+Jui5KeyCDi/8gN9XifVY0k2oeoZ00S9SW5xvt2CXeV/U0RktBEON9IvJzJxQlApdO5iOJq3l30WlSx2NOVIJQ+juewWB3W1gaqPaqmA+f7Vtj6xjGBFEsui+M1r608T6+yJwHih001TTG9w9TGE/7mZCxDJE67wz5ircM+QRaVfRfCmVuZHN0cmVhbQplbmRvYmoKMSAwIG9iago8PC9UYWJzL1MvR3JvdXA8PC9TL1RyYW5zcGFyZW5jeS9UeXBlL0dyb3VwL0NTL0RldmljZVJHQj4+L0NvbnRlbnRzIDMgMCBSL1R5cGUvUGFnZS9SZXNvdXJjZXM8PC9Db2xvclNwYWNlPDwvQ1MvRGV2aWNlUkdCPj4vUHJvY1NldCBbL1BERiAvVGV4dCAvSW1hZ2VCIC9JbWFnZUMgL0ltYWdlSV0vRm9udDw8L0YxIDIgMCBSPj4+Pi9QYXJlbnQgNCAwIFIvTWVkaWFCb3hbMCAwIDU5NSA4NDJdPj4KZW5kb2JqCjUgMCBvYmoKWzEgMCBSL1hZWiAwIDg1MiAwXQplbmRvYmoKMiAwIG9iago8PC9TdWJ0eXBlL1R5cGUxL1R5cGUvRm9udC9CYXNlRm9udC9IZWx2ZXRpY2EvRW5jb2RpbmcvV2luQW5zaUVuY29kaW5nPj4KZW5kb2JqCjQgMCBvYmoKPDwvS2lkc1sxIDAgUl0vVHlwZS9QYWdlcy9Db3VudCAxL0lUWFQoMi4xLjcpPj4KZW5kb2JqCjYgMCBvYmoKPDwvTmFtZXNbKEpSX1BBR0VfQU5DSE9SXzBfMSkgNSAwIFJdPj4KZW5kb2JqCjcgMCBvYmoKPDwvRGVzdHMgNiAwIFI+PgplbmRvYmoKOCAwIG9iago8PC9OYW1lcyA3IDAgUi9UeXBlL0NhdGFsb2cvUGFnZXMgNCAwIFIvVmlld2VyUHJlZmVyZW5jZXM8PC9QcmludFNjYWxpbmcvQXBwRGVmYXVsdD4+Pj4KZW5kb2JqCjkgMCBvYmoKPDwvTW9kRGF0ZShEOjIwMTYwMzMxMjE1NjM2WikvQ3JlYXRvcihKYXNwZXJSZXBvcnRzIExpYnJhcnkgdmVyc2lvbiA2LjIuMCkvQ3JlYXRpb25EYXRlKEQ6MjAxNjAzMzEyMTU2MzZaKS9Qcm9kdWNlcihpVGV4dCAyLjEuNyBieSAxVDNYVCk+PgplbmRvYmoKeHJlZgowIDEwCjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDM2MCAwMDAwMCBuIAowMDAwMDAwNjM2IDAwMDAwIG4gCjAwMDAwMDAwMTUgMDAwMDAgbiAKMDAwMDAwMDcyNCAwMDAwMCBuIAowMDAwMDAwNjAxIDAwMDAwIG4gCjAwMDAwMDA3ODcgMDAwMDAgbiAKMDAwMDAwMDg0MSAwMDAwMCBuIAowMDAwMDAwODczIDAwMDAwIG4gCjAwMDAwMDA5NzYgMDAwMDAgbiAKdHJhaWxlcgo8PC9JbmZvIDkgMCBSL0lEIFs8ODgwOTg2NWQ1MTAzZjMyMWFlY2Q5NzMwNjk0ODBhZGY+PDc2MGU5ZWRjMTk2ODcwNTg4MTA1MmFiOTNmYjJhM2I0Pl0vUm9vdCA4IDAgUi9TaXplIDEwPj4Kc3RhcnR4cmVmCjExMzEKJSVFT0YK"
+    }
+  ]
+}
+
+API Gateway Model
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "JasperReportRequestModel",
+  "type": "object",
+    "properties": {
+      "xmlRequestData": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "xmlRequest": { "type": "string" }
+          }
+        }
+      }
+    }
+}
+---------
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "PhotosInputModel",
+  "type": "object",
+  "properties": {
+    "xmlRequestData": {
+      "type": "object",
+      "properties": {
+        "page": { "type": "integer" },
+        "pages": { "type": "string" },
+        "perpage": { "type": "integer" },
+        "total": { "type": "string" },
+        "photo": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+Readme.md
+----------
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "PhotosInputModel",
+  "type": "object",
+      "properties": {
+        "photo": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+            }
+          }
+        }
+  }
+}
+--------------
+{
+  "photos": {
+    "photo": [
+      {
+        "id": "12345678901",
+      },
+      {
+        "id": "23456789012",
+      }
+    ]
+  }
+}
+----------
+{
+  "xmlRequestData": [
+    { 
+      "xmlRequest" : "<?xml version=\"1.0\" encoding=\"UTF-8\"?><report type=\"s3\" xml-select-expression=\"/report/city\" jrxml-location=\"jasperreports-jrxml\" jrxml=\"report.jrxml\" pdf-location=\"jasperreports-generated-pdf\" pdf=\"s3-report.pdf\"><city><name>New York</name><population>12000000</population></city><city><name>Manchester</name><population>1000000</population></city><city><name>Stoke</name><population>123456</population></city></report>"
+    },
+    {
+      "xmlRequest" : "<?xml version=\"1.0\" encoding=\"UTF-8\"?><report type=\"s3\" xml-select-expression=\"/report/city\" jrxml-location=\"jasperreports-jrxml\" jrxml=\"report.jrxml\" pdf-location=\"jasperreports-generated-pdf\" pdf=\"s3-report.pdf\"><city><name>New York</name><population>12000000</population></city><city><name>Manchester</name><population>1000000</population></city><city><name>Stoke</name><population>123456</population></city></report>"
+    }
+  ]
+}
+
+----------
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "FeedbackModel",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "feedback": { "type": "integer", "minimum": 1, "maximum": 5 }
+    }
+  }
+}
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "GroceryStoreOutputModel",
+  "type": "object",
+  "properties": {
+    "choices": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "kind": { "type": "string" },
+          "suggestedPrice": { "type": "string" },
+          "available": { "type": "integer" }
+        }
+      }
+    }
+  }
+}
+I
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "GroceryStoreInputModel",
+  "type": "object",
+  "properties": {
+    "department": { "type": "string" },
+    "categories": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "bins": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "category": { "type": "string" },
+          "type": { "type": "string" },
+          "price": { "type": "number" },
+          "unit": { "type": "string" },
+          "quantity": { "type": "integer" }
+        }
+      }
+    }
+  }
+}
