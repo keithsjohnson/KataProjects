@@ -6,6 +6,9 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.xml.bind.DatatypeConverter;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.events.S3Event;
@@ -14,6 +17,7 @@ import com.amazonaws.services.s3.event.S3EventNotification.S3EventNotificationRe
 import uk.co.keithsjohnson.jasperreports.lambda.api.JasperReportIOProcessor;
 import uk.co.keithsjohnson.jasperreports.lambda.api.JasperReportJSONRequest;
 import uk.co.keithsjohnson.jasperreports.lambda.api.JasperReportJSONResponse;
+import uk.co.keithsjohnson.jasperreports.lambda.api.JasperReportJSONResponseList;
 import uk.co.keithsjohnson.jasperreports.lambda.api.JasperReportRequestModel;
 import uk.co.keithsjohnson.jasperreports.lambda.service.JasperReportCreatorImpl;
 import uk.co.keithsjohnson.jasperreports.lambda.service.JasperReportXmlDataProcessor;
@@ -52,27 +56,28 @@ public class UploadPDFGenerationXmlFileLamda {
 		return "OK";
 	}
 
-	public JasperReportJSONResponse handleUploadPDFGenerationJSONString(JasperReportJSONRequest jasperReportJSONRequest,
-			final Context context) {
+	public JasperReportJSONResponseList handleUploadPDFGenerationJSONString(
+			JasperReportJSONRequest jasperReportJSONRequest, final Context context) {
 		String[] xmlDataArray = jasperReportJSONRequest.getXmlRequestData();
 
 		List<String> xmlDataList = Arrays.asList(xmlDataArray);
 
-		String[] pdfFilename = xmlDataList
+		List<JasperReportJSONResponse> jasperReportJSONResponseList = xmlDataList
 				.stream()
 				.map(xmlData -> processXmlData(context, xmlData))
-				.toArray(String[]::new);
+				.collect(Collectors.toList());
 
-		return new JasperReportJSONResponse(pdfFilename);
+		return new JasperReportJSONResponseList(jasperReportJSONResponseList);
 	}
 
-	protected String processXmlData(Context context, String xmlData) {
+	protected JasperReportJSONResponse processXmlData(Context context, String xmlData) {
 		context.getLogger().log(xmlData);
 		JasperReportRequestModel jasperReportRequestModel = jasperReportProcessor.getXmlContentsForString(xmlData);
 		return processJasperReportRequestModel(context, jasperReportRequestModel);
 	}
 
-	protected String processS3EventNotificationRecord(S3EventNotificationRecord s3EventNotificationRecord,
+	protected JasperReportJSONResponse processS3EventNotificationRecord(
+			S3EventNotificationRecord s3EventNotificationRecord,
 			Context context) {
 
 		String xmlLocation = s3EventNotificationRecord.getS3().getBucket().getName();
@@ -90,12 +95,14 @@ public class UploadPDFGenerationXmlFileLamda {
 		return processJasperReportRequestModel(context, jasperReportRequestModel);
 	}
 
-	protected String processJasperReportRequestModel(Context context,
+	protected JasperReportJSONResponse processJasperReportRequestModel(Context context,
 			JasperReportRequestModel jasperReportRequestModel) {
 		context.getLogger().log(jasperReportRequestModel.toString());
 		context.getLogger().log("-----------------------------------");
 
 		byte[] pdfBytes = jasperReportCreatorImpl.processJasperReportRequest(jasperReportRequestModel);
+
+		String pdfBase64String = convertByteArrayToStringUsingBase64(pdfBytes);
 
 		jasperReportProcessor.writePdf(jasperReportRequestModel, pdfBytes);
 
@@ -103,11 +110,22 @@ public class UploadPDFGenerationXmlFileLamda {
 				+ " at " + getNowAsFormatedUKDateTimeString();
 		context.getLogger().log(endMessage);
 		context.getLogger().log("-----------------------------------");
-		return jasperReportRequestModel.getJasperReportXmlDataModel().getPdfNameWithUUID();
+		JasperReportJSONResponse jasperReportJSONResponse = new JasperReportJSONResponse();
+		jasperReportJSONResponse
+				.setPdfFilename(jasperReportRequestModel.getJasperReportXmlDataModel().getPdfNameWithUUID());
+		jasperReportJSONResponse.setPdfBase64String(pdfBase64String);
+		return jasperReportJSONResponse;
 	}
 
 	protected String getNowAsFormatedUKDateTimeString() {
 		return LocalDateTime.now(ZoneId.of(EUROPE_LONDON_TIMEZONE)).format(formatter);
 	}
 
+	protected String convertByteArrayToStringUsingBase64(byte[] bytes) {
+		return DatatypeConverter.printBase64Binary(bytes);
+	}
+
+	protected byte[] convertStringToByteArrayUsingBase64(String stringData) {
+		return DatatypeConverter.parseBase64Binary(stringData);
+	}
 }

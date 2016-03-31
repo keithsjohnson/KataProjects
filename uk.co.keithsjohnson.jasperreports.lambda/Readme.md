@@ -102,3 +102,42 @@ Try more detailed Jasper Reports - they are very simple at the moment.
 Cache compiled jrxml reports to help with performance.
 
 Need to add return of PDF in JSON result.
+
+Notes
+-----
+Javascript to output pdf in base64 String to browser:
+http://stackoverflow.com/questions/11415665/save-base64-string-as-pdf-at-client-side-with-javascript
+---
+window.open("data:application/pdf;base64," + Base64.encode(out));
+---
+HTML:
+<!doctype>
+<html>
+<head>
+   <title>jsPDF</title>
+   <script type="text/javascript" src="../libs/base64.js"></script>
+   <script type="text/javascript" src="../libs/sprintf.js"></script>
+   <script type="text/javascript" src="../jspdf.js"></script>
+
+       <script type="text/javascript">
+
+        function demo1() {
+            jsPDF.init();
+            jsPDF.addPage();
+            jsPDF.text(20, 20, 'Hello world!');
+            jsPDF.text(20, 30, 'This is client-side Javascript, pumping out a PDF.');
+
+            // Making Data URI
+            var out = jsPDF.output();
+            var url = 'data:application/pdf;base64,' + Base64.encode(out);
+
+            document.location.href = url;
+         }
+    </script>
+</head>
+<body>
+
+<a href="javascript:demo1()">Run Code</a>
+
+</body>
+</html>
