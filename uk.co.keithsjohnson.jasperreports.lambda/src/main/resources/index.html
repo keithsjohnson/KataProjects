@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Jasper Report From XML</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+	<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.css">
+    <script type="text/javascript" src= "https://code.jquery.com/jquery-2.1.4.js" ></script>
+    <script type="text/javascript">
+    function createSingleJasperReportInSameWindow(jasperReportTextareaString, inWindow) {
+    	var xmlData = document.getElementById(jasperReportTextareaString).value;
+    	var jsonDataPost = "{\"xmlRequestData\": [{\"xmlRequest\" : \""+xmlData+"\"}]}";
+    	postJasperReport(jsonDataPost, inWindow);
+    }
+    
+    function postJasperReport(jsonDataPost, inWindow) {
+    	var uri = "https://zrh9a3s3u4.execute-api.eu-west-1.amazonaws.com/JasperReportsAPI";
+    	console.log("uri: " + uri);
+    	var jqxhr = $.ajax( {method: "POST", url: uri, data: jsonDataPost} ) 
+    	  .done(function(response) {
+    		console.log( "success: " + response.report[0].pdfBase64String );
+		    open('data:application/pdf;base64,' + response.report[0].pdfBase64String, inWindow);
+    		if (response.report.length>1) {
+    		    open('data:application/pdf;base64,' + response.report[1].pdfBase64String, inWindow+'01');
+    		}
+    	  })
+    	  .fail(function(response) {
+    	    alert( "error " + response );
+    	  });
+    }
+    
+    function createBothJasperReportsInNewWindows() {
+    	var xmlCityData = document.getElementById('jasperReportCityTextarea').value;
+    	var xmlDietData = document.getElementById('jasperReportDietTextarea').value;
+    	var jsonDataPost = "{\"xmlRequestData\": [{\"xmlRequest\" : \""+xmlCityData+"\"},{\"xmlRequest\" : \""+xmlDietData+"\"}]}";
+    	postJasperReport(jsonDataPost, 'newWindow');
+    }
+ 
+    function initialize() {
+        var initialXmlCityData = "<report type='s3' xml-select-expression='/report/city' jrxml-location='jasperreports-jrxml' jrxml='report.jrxml' pdf-location='jasperreports-generated-pdf' pdf='s3-report.pdf'><city><name>New York</name><population>12000000</population></city><city><name>Manchester</name><population>1000000</population></city><city><name>Stoke</name><population>123456</population></city></report>";
+     	var jasperReportCityTextarea = document.getElementById('jasperReportCityTextarea');
+       	jasperReportCityTextarea.value=initialXmlCityData;
+
+       	var initialXmlDietData = "<report type='s3' xml-select-expression='/report/food' jrxml-location='jasperreports-jrxml' jrxml='XMLDSReport.jrxml' pdf-location='jasperreports-generated-pdf' pdf='s3-simple.pdf'><food><name>Belgian Waffles</name><price>5.95</price><description>Two of our famous Belgian Waffles with plenty of real maple syrup</description><calories>650</calories></food><food><name>Strawberry Belgian Waffles</name><price>7.95</price><description>Light Belgian waffles covered with strawberries and whipped cream</description><calories>900</calories></food><food><name>Berry-Berry Belgian Waffles</name><price>8.95</price><description>Light Belgian waffles covered with an assortment of fresh berries and whipped cream</description><calories>900</calories></food><food><name>French Toast</name><price>4.50</price><description>Thick slices made from our homemade sourdough bread</description><calories>600</calories></food><food><name>Homestyle Breakfast</name><price>6.95</price><description>Two eggs, bacon or sausage, toast, and our ever-popular hash browns</description><calories>950</calories></food></report>";
+       	var jasperReportDietTextarea = document.getElementById('jasperReportDietTextarea');
+       	jasperReportDietTextarea.value=initialXmlDietData;
+    }
+    </script>
+</head>
+<body onLoad="initialize();">
+<div>
+  <H1>AWS Serverless Code: Create Jasper Report From XML</H1>
+  <H2>Using AWS Services: S3, API Gateway, AWS Lambda, Java 8 and Jasper Reports</H2>
+  <div>Jasper Report City Jasper Report:</div>
+  <div><button id="createCityJasperReport" onclick="createSingleJasperReportInSameWindow('jasperReportCityTextarea','_self');">Create City Jasper Report for XML</button></div>
+  <div><textarea id="jasperReportCityTextarea" name="jasperReportCityTextarea" cols="200" rows="20" style="width: 360px; height: 220px;" wrap="soft"></textarea></div>
+  <div>Jasper Report Diet Jasper Report:</div>
+  <div><button id="createDietJasperReport" onclick="createSingleJasperReportInSameWindow('jasperReportDietTextarea','_self');">Create Diet Jasper Report for XML</button></div>
+  <div><textarea id="jasperReportDietTextarea" name="jasperReportDietTextarea" cols="200" rows="20" style="width: 360px; height: 590px;" wrap="soft"></textarea></div>
+  <div>Jasper Report City and Diet Jasper Reports in New Window:</div>
+  <div><button id="createJasperReports" onclick="createBothJasperReportsInNewWindows();">Create City and Diet Jasper Reports for XMLs</button></div>
+</div>
+</body>
+</html>

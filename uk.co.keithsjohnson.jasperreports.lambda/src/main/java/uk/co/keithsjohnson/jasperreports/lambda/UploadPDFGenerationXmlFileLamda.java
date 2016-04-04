@@ -1,6 +1,9 @@
 package uk.co.keithsjohnson.jasperreports.lambda;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -54,6 +57,17 @@ public class UploadPDFGenerationXmlFileLamda {
 						context));
 
 		return "OK";
+	}
+
+	public JasperReportJSONResponse handleUploadPDFGenerationSingleJSONString(
+			JasperReportJSONRequest jasperReportJSONRequest, final Context context) {
+
+		context.getLogger().log("-----------------------------------");
+		context.getLogger().log("START: " + getNowAsFormatedUKDateTimeString());
+		context.getLogger().log("-----------------------------------");
+		context.getLogger().log(jasperReportJSONRequest.toString());
+
+		return processXmlData(context, jasperReportJSONRequest);
 	}
 
 	public JasperReportJSONResponseList handleUploadPDFGenerationJSONString(
@@ -123,6 +137,10 @@ public class UploadPDFGenerationXmlFileLamda {
 		return LocalDateTime.now(ZoneId.of(EUROPE_LONDON_TIMEZONE)).format(formatter);
 	}
 
+	protected String convertXMLBase64StringToXmlString(String xmlStringAsBase64) {
+		return new String(convertStringToByteArrayUsingBase64(xmlStringAsBase64));
+	}
+
 	protected String convertByteArrayToStringUsingBase64(byte[] bytes) {
 		return DatatypeConverter.printBase64Binary(bytes);
 	}
@@ -130,4 +148,21 @@ public class UploadPDFGenerationXmlFileLamda {
 	protected byte[] convertStringToByteArrayUsingBase64(String stringData) {
 		return DatatypeConverter.parseBase64Binary(stringData);
 	}
+
+	protected String encode(String urlStringToEncode) {
+		try {
+			return URLEncoder.encode(urlStringToEncode, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected String decode(String urlStringToEncode) {
+		try {
+			return URLDecoder.decode(urlStringToEncode, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 }
