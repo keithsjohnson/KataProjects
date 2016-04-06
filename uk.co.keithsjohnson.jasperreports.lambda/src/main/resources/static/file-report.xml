@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report type="directory" xml-select-expression="/report/city" jrxml-location="src/main/resources/static" jrxml="report.jrxml" pdf-location="src/main/resources/static" pdf="file-report.pdf">
+	<title>Cities</title>
 	<city>
 		<name>New York</name>
 		<population>12000000</population>

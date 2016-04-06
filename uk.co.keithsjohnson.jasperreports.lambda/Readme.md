@@ -60,6 +60,18 @@ The process is as follows:
 
 10. The UploadPDFGenerationXmlFileLamda process Deletes the XML Request File from S3.
 
+Jasper Reports iReport Template Generator
+-----------------------------------------
+Jasper Reports iReport Template Generator require Java 1.7 JRE not 1.8 therefore set your path accordingly:
+cd E:\dev\git\KataProjects\uk.co.keithsjohnson.jasperreports.lambda
+
+set JAVA_HOME=E:\dev\install\Java\jre1.7.0_79
+
+set PATH=E:\dev\install\Java\jre1.7.0_79;%PATH%
+
+E:\dev\install\Jaspersoft\iReport-5.6.0\bin\ireport.exe
+
+
 Test Data
 ---------
 The directory src/main/java/resources/static contains 2 simple examples of a .jrxml files report.jrxml and XMLDSReport.xml.

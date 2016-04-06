@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="in" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="13a81133-cefc-40e8-9df6-6006975d52f6">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" fontSize="26"/>
@@ -9,13 +9,18 @@
 		<defaultValueExpression><![CDATA["http://localhost:8080/report.xml"]]></defaultValueExpression>
 	</parameter>
 	<queryString language="xPath">
-		<![CDATA[//city]]>
+		<![CDATA[//city
+//title
+]]>
 	</queryString>
 	<field name="name" class="java.lang.String">
 		<fieldDescription><![CDATA[name]]></fieldDescription>
 	</field>
 	<field name="population" class="java.lang.Long">
 		<fieldDescription><![CDATA[population]]></fieldDescription>
+	</field>
+	<field name="title" class="java.lang.String">
+		<fieldDescription><![CDATA[title]]></fieldDescription>
 	</field>
 	<group name="Header">
 		<groupHeader>
