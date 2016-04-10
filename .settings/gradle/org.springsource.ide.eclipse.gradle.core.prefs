@@ -1,5 +1,5 @@
 #org.springsource.ide.eclipse.gradle.core.preferences.GradleProjectPreferences
-#Wed Apr 06 22:18:21 BST 2016
-build.family.org.gradle.tooling.model.eclipse.HierarchicalEclipseProject=;uk.co.keithsjohnson.jasperreports;uk.co.keithsjohnson.jasperreports.lambda;uk.co.keithsjohnson.springboot.accounts;uk.co.keithsjohnson.springboot.circuitbreaker;uk.co.keithsjohnson.springboot.eureka;uk.co.keithsjohnson.springboot.eureka.client;uk.co.keithsjohnson.springboot.hystrix.dashboard;uk.co.keithsjohnson.springboot.users;uk.co.keithsjohnson.xmltojsonconverter.lambda;
+#Fri Apr 08 22:34:36 BST 2016
+build.family.org.gradle.tooling.model.eclipse.HierarchicalEclipseProject=;uk.co.keithsjohnson.jasperreports;uk.co.keithsjohnson.jasperreports.lambda;uk.co.keithsjohnson.springboot.accounts;uk.co.keithsjohnson.springboot.circuitbreaker;uk.co.keithsjohnson.springboot.eureka;uk.co.keithsjohnson.springboot.eureka.client;uk.co.keithsjohnson.springboot.hystrix.dashboard;uk.co.keithsjohnson.springboot.users;uk.co.keithsjohnson.sqs.lambda;uk.co.keithsjohnson.xmltojsonconverter.lambda;
 org.springsource.ide.eclipse.gradle.linkedresources=
 org.springsource.ide.eclipse.gradle.rootprojectloc=

@@ -1,0 +1,150 @@
+package uk.co.keithsjohnson.sqs.lambda.service;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import com.amazonaws.services.sqs.AmazonSQS;
+import com.amazonaws.services.sqs.AmazonSQSClient;
+import com.amazonaws.services.sqs.model.BatchResultErrorEntry;
+import com.amazonaws.services.sqs.model.Message;
+import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
+import com.amazonaws.services.sqs.model.ReceiveMessageResult;
+import com.amazonaws.services.sqs.model.SendMessageBatchRequest;
+import com.amazonaws.services.sqs.model.SendMessageBatchRequestEntry;
+import com.amazonaws.services.sqs.model.SendMessageBatchResult;
+import com.amazonaws.services.sqs.model.SendMessageBatchResultEntry;
+
+import uk.co.keithsjohnson.sqs.lambda.api.SqsMessageRequest;
+import uk.co.keithsjohnson.sqs.lambda.api.SqsMessageRequestsList;
+import uk.co.keithsjohnson.sqs.lambda.api.SqsMessageResponse;
+import uk.co.keithsjohnson.sqs.lambda.api.SqsMessageResponsesList;
+
+public class SQSMessageRequestSender {
+
+	private static final String SEND = "send";
+
+	private final AmazonSQS sqsClient;
+
+	public SQSMessageRequestSender() {
+		sqsClient = new AmazonSQSClient();
+	}
+
+	public SqsMessageResponsesList sendSQSMessageRequest(
+			SqsMessageRequestsList sqsMessageRequestsList) {
+
+		if (SEND.equalsIgnoreCase(sqsMessageRequestsList.getSqsRequestType())) {
+			SendMessageBatchRequest sendMessageBatchRequest = convertSQSMessageReuestListToSendMessageBatchResquest(
+					sqsMessageRequestsList);
+
+			SendMessageBatchResult sendMessageBatchResult = sqsClient.sendMessageBatch(sendMessageBatchRequest);
+
+			List<SendMessageBatchResultEntry> sendMessageBatchResultEntry = sendMessageBatchResult.getSuccessful();
+			SqsMessageResponsesList sqsMessageResponsesList = convertSendMessageBatchResultToSQSMessageResponseList(
+					sqsMessageRequestsList.getSqsRequestType(), sendMessageBatchResult, sendMessageBatchResultEntry);
+
+			return sqsMessageResponsesList;
+		} else {
+			ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest();
+			receiveMessageRequest.setQueueUrl(sqsMessageRequestsList.getSqsUrl());
+			receiveMessageRequest.setMaxNumberOfMessages(10);
+			receiveMessageRequest.setWaitTimeSeconds(1);
+
+			ReceiveMessageResult receiveMessageResult = sqsClient.receiveMessage(receiveMessageRequest);
+
+			List<Message> messages = receiveMessageResult.getMessages();
+			List<SqsMessageResponse> sqsMessageResponses = messages
+					.stream()
+					.map(mapMessageToSQSMessageResponse)
+					.collect(Collectors.toCollection(ArrayList::new));
+
+			SqsMessageResponsesList sqsMessageResponsesList = new SqsMessageResponsesList(
+					sqsMessageRequestsList.getSqsRequestType(), sqsMessageResponses);
+
+			Consumer<SqsMessageResponse> deleteMessageFromQueue = (message) -> {
+				sqsClient.deleteMessage(sqsMessageRequestsList.getSqsUrl(), message.getId());
+			};
+
+			List<SqsMessageResponse> sqsMessageResponsesToDelete = sqsMessageResponsesList.getSqsMessageResponsesList();
+			sqsMessageResponsesToDelete
+					.stream()
+					.forEach(deleteMessageFromQueue);
+
+			return sqsMessageResponsesList;
+		}
+	}
+
+	protected SendMessageBatchRequest convertSQSMessageReuestListToSendMessageBatchResquest(
+			SqsMessageRequestsList sqsMessageRequestsList) {
+		SendMessageBatchRequest sendMessageBatchRequest = new SendMessageBatchRequest(
+				sqsMessageRequestsList.getSqsUrl());
+
+		List<SqsMessageRequest> sqsMessageRequestsListGeneric = sqsMessageRequestsList.getSqsMessageRequestsList();
+
+		Collection<SendMessageBatchRequestEntry> sendMessageBatchRequestEntries = sqsMessageRequestsListGeneric
+				.stream()
+				.map(mapSQSMessageRequestToSendMessageBatchRequestEntry)
+				.collect(Collectors.toCollection(ArrayList::new));
+
+		sendMessageBatchRequest.setEntries(sendMessageBatchRequestEntries);
+
+		return sendMessageBatchRequest;
+	}
+
+	protected SqsMessageResponsesList convertSendMessageBatchResultToSQSMessageResponseList(String sqsRequestType,
+			SendMessageBatchResult sendMessageBatchResult,
+			List<SendMessageBatchResultEntry> sendMessageBatchResultEntry) {
+		List<SqsMessageResponse> sqsMessageResponses = sendMessageBatchResultEntry
+				.stream()
+				.map(mapSendMessageBatchResultEntryToSQSMessageResponse)
+				.collect(Collectors.toCollection(ArrayList::new));
+
+		List<BatchResultErrorEntry> batchResultErrorEntry = sendMessageBatchResult.getFailed();
+		List<SqsMessageResponse> sqsMessageResponsesErrors = batchResultErrorEntry
+				.stream()
+				.map(mapBatchResultErrorEntryToSQSMessageResponse)
+				.collect(Collectors.toCollection(ArrayList::new));
+
+		sqsMessageResponses.addAll(sqsMessageResponsesErrors);
+
+		SqsMessageResponsesList sqsMessageResponsesList = new SqsMessageResponsesList(sqsRequestType,
+				sqsMessageResponses);
+
+		return sqsMessageResponsesList;
+	}
+
+	Function<SqsMessageRequest, SendMessageBatchRequestEntry> mapSQSMessageRequestToSendMessageBatchRequestEntry = new Function<SqsMessageRequest, SendMessageBatchRequestEntry>() {
+		public SendMessageBatchRequestEntry apply(SqsMessageRequest sqsMessageRequest) {
+			SendMessageBatchRequestEntry sendMessageBatchRequestEntry = new SendMessageBatchRequestEntry(
+					sqsMessageRequest.getId(), sqsMessageRequest.getSqsRequest());
+			return sendMessageBatchRequestEntry;
+		}
+	};
+
+	Function<SendMessageBatchResultEntry, SqsMessageResponse> mapSendMessageBatchResultEntryToSQSMessageResponse = new Function<SendMessageBatchResultEntry, SqsMessageResponse>() {
+		public SqsMessageResponse apply(SendMessageBatchResultEntry sendMessageBatchResultEntry) {
+			SqsMessageResponse sqsMessageResponse = new SqsMessageResponse(sendMessageBatchResultEntry.getId(),
+					sendMessageBatchResultEntry.getMessageId());
+			return sqsMessageResponse;
+		}
+	};
+
+	Function<BatchResultErrorEntry, SqsMessageResponse> mapBatchResultErrorEntryToSQSMessageResponse = new Function<BatchResultErrorEntry, SqsMessageResponse>() {
+		public SqsMessageResponse apply(BatchResultErrorEntry sendMessageBatchResultEntry) {
+			SqsMessageResponse sqsMessageResponse = new SqsMessageResponse(sendMessageBatchResultEntry.getId(),
+					sendMessageBatchResultEntry.getCode() + "" + sendMessageBatchResultEntry.getMessage());
+			return sqsMessageResponse;
+		}
+	};
+
+	Function<Message, SqsMessageResponse> mapMessageToSQSMessageResponse = new Function<Message, SqsMessageResponse>() {
+		public SqsMessageResponse apply(Message message) {
+			SqsMessageResponse sqsMessageResponse = new SqsMessageResponse(message.getReceiptHandle(),
+					message.getBody());
+			return sqsMessageResponse;
+		}
+	};
+}

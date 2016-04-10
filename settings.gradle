@@ -7,4 +7,5 @@ include ":uk.co.keithsjohnson.springboot.eureka.client"
 include ":uk.co.keithsjohnson.springboot.hystrix.dashboard"
 include ":uk.co.keithsjohnson.springboot.users"
 include ":uk.co.keithsjohnson.xmltojsonconverter.lambda"
+include ":uk.co.keithsjohnson.sqs.lambda"
 rootProject.name = 'KataProjects'
