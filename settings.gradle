@@ -1,3 +1,4 @@
+include ":uk.co.keithsjohnson.designpatterns"
 include ":uk.co.keithsjohnson.jasperreports"
 include ":uk.co.keithsjohnson.jasperreports.lambda"
 include ":uk.co.keithsjohnson.springboot.accounts"
