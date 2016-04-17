@@ -1,12 +1,15 @@
 package uk.co.keithsjohnson.sqs.lambda.service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.amazonaws.services.sns.AmazonSNS;
+import com.amazonaws.services.sns.AmazonSNSClient;
+import com.amazonaws.services.sns.model.PublishRequest;
+import com.amazonaws.services.sns.model.PublishResult;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClient;
 import com.amazonaws.services.sqs.model.BatchResultErrorEntry;
@@ -27,10 +30,15 @@ public class SQSMessageRequestSender {
 
 	private static final String SEND = "send";
 
+	private static final String SEND_SNS = "sendSNS";
+
 	private final AmazonSQS sqsClient;
+
+	private final AmazonSNS snsClient;
 
 	public SQSMessageRequestSender() {
 		sqsClient = new AmazonSQSClient();
+		snsClient = new AmazonSNSClient();
 	}
 
 	public SqsMessageResponsesList sendSQSMessageRequest(
@@ -46,6 +54,23 @@ public class SQSMessageRequestSender {
 			SqsMessageResponsesList sqsMessageResponsesList = convertSendMessageBatchResultToSQSMessageResponseList(
 					sqsMessageRequestsList.getSqsRequestType(), sendMessageBatchResult, sendMessageBatchResultEntry);
 
+			return sqsMessageResponsesList;
+		} else if (SEND_SNS.equalsIgnoreCase(sqsMessageRequestsList.getSqsRequestType())) {
+
+			List<PublishRequest> publishRequests = convertSQSMessageRequestListToPublishRequest(sqsMessageRequestsList);
+
+			List<PublishResult> publishResults = publishRequests
+					.stream()
+					.map(publishRequest -> snsClient.publish(publishRequest))
+					.collect(Collectors.toList());
+
+			List<SqsMessageResponse> sqsMessageResponses = publishResults
+					.stream()
+					.map(mapPublishResultToSqsMessageResponse)
+					.collect(Collectors.toList());
+
+			SqsMessageResponsesList sqsMessageResponsesList = new SqsMessageResponsesList(
+					sqsMessageRequestsList.getSqsRequestType(), sqsMessageResponses);
 			return sqsMessageResponsesList;
 		} else {
 			ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest();
@@ -77,6 +102,21 @@ public class SQSMessageRequestSender {
 		}
 	}
 
+	protected List<PublishRequest> convertSQSMessageRequestListToPublishRequest(
+			SqsMessageRequestsList sqsMessageRequestsList) {
+		SendMessageBatchRequest sendMessageBatchRequest = new SendMessageBatchRequest(
+				sqsMessageRequestsList.getSqsUrl());
+
+		List<SqsMessageRequest> sqsMessageRequestsListGeneric = sqsMessageRequestsList.getSqsMessageRequestsList();
+
+		List<PublishRequest> publishRequests = sqsMessageRequestsListGeneric
+				.stream()
+				.map(mapSQSMessageRequestToPublishRequest)
+				.collect(Collectors.toCollection(ArrayList::new));
+
+		return publishRequests;
+	}
+
 	protected SendMessageBatchRequest convertSQSMessageReuestListToSendMessageBatchResquest(
 			SqsMessageRequestsList sqsMessageRequestsList) {
 		SendMessageBatchRequest sendMessageBatchRequest = new SendMessageBatchRequest(
@@ -84,7 +124,7 @@ public class SQSMessageRequestSender {
 
 		List<SqsMessageRequest> sqsMessageRequestsListGeneric = sqsMessageRequestsList.getSqsMessageRequestsList();
 
-		Collection<SendMessageBatchRequestEntry> sendMessageBatchRequestEntries = sqsMessageRequestsListGeneric
+		List<SendMessageBatchRequestEntry> sendMessageBatchRequestEntries = sqsMessageRequestsListGeneric
 				.stream()
 				.map(mapSQSMessageRequestToSendMessageBatchRequestEntry)
 				.collect(Collectors.toCollection(ArrayList::new));
@@ -115,6 +155,15 @@ public class SQSMessageRequestSender {
 
 		return sqsMessageResponsesList;
 	}
+
+	Function<SqsMessageRequest, PublishRequest> mapSQSMessageRequestToPublishRequest = new Function<SqsMessageRequest, PublishRequest>() {
+		public PublishRequest apply(SqsMessageRequest sqsMessageRequest) {
+			PublishRequest publishRequest = new PublishRequest(sqsMessageRequest.getSnsTopicArn(),
+					sqsMessageRequest.getSqsRequest(), sqsMessageRequest.getSubject());
+			System.out.println(publishRequest.toString());
+			return publishRequest;
+		}
+	};
 
 	Function<SqsMessageRequest, SendMessageBatchRequestEntry> mapSQSMessageRequestToSendMessageBatchRequestEntry = new Function<SqsMessageRequest, SendMessageBatchRequestEntry>() {
 		public SendMessageBatchRequestEntry apply(SqsMessageRequest sqsMessageRequest) {
@@ -147,4 +196,12 @@ public class SQSMessageRequestSender {
 			return sqsMessageResponse;
 		}
 	};
+
+	Function<PublishResult, SqsMessageResponse> mapPublishResultToSqsMessageResponse = new Function<PublishResult, SqsMessageResponse>() {
+		public SqsMessageResponse apply(PublishResult publishResult) {
+			SqsMessageResponse sqsMessageResponse = new SqsMessageResponse(publishResult.getMessageId(), "");
+			return sqsMessageResponse;
+		}
+	};
+
 }
