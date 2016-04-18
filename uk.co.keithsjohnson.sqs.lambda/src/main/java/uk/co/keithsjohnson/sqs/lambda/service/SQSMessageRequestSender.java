@@ -47,7 +47,7 @@ public class SQSMessageRequestSender {
 			SqsMessageRequestsList sqsMessageRequestsList) {
 
 		if (SEND.equalsIgnoreCase(sqsMessageRequestsList.getSqsRequestType())) {
-			SendMessageBatchRequest sendMessageBatchRequest = convertSQSMessageReuestListToSendMessageBatchResquest(
+			SendMessageBatchRequest sendMessageBatchRequest = convertSQSMessageRequestListToSendMessageBatchResquest(
 					sqsMessageRequestsList);
 
 			SendMessageBatchResult sendMessageBatchResult = sqsClient.sendMessageBatch(sendMessageBatchRequest);
@@ -119,7 +119,7 @@ public class SQSMessageRequestSender {
 		return publishRequests;
 	}
 
-	protected SendMessageBatchRequest convertSQSMessageReuestListToSendMessageBatchResquest(
+	protected SendMessageBatchRequest convertSQSMessageRequestListToSendMessageBatchResquest(
 			SqsMessageRequestsList sqsMessageRequestsList) {
 		SendMessageBatchRequest sendMessageBatchRequest = new SendMessageBatchRequest(
 				sqsMessageRequestsList.getSqsUrl());
