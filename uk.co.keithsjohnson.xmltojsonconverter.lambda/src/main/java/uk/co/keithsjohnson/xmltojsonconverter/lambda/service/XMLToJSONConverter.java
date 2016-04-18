@@ -13,7 +13,9 @@ public class XMLToJSONConverter {
 
 	public String convertXMLToJSON(String xml) {
 		try {
+			System.out.println("xml: " + xml);
 			List<LinkedHashMap<String, String>> entries = XML_MAPPER.readValue(xml, List.class);
+			System.out.println("entries: " + entries);
 
 			Data data = new Data(entries);
 			return JSON_MAPPER.writeValueAsString(data);

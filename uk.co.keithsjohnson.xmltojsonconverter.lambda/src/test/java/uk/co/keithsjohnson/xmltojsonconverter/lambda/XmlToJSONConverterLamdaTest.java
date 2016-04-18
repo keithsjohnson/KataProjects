@@ -20,7 +20,7 @@ public class XmlToJSONConverterLamdaTest {
 
 	@Test
 	public void shouldCreateReportPdf() {
-		XMLRequest xmlRequest = new XMLRequest(XMLS3);
+		XMLRequest xmlRequest = new XMLRequest("", XMLS3);
 		JSONResponse jsonResponse = testSubject.handleXmlToJsonConverter(xmlRequest, testContext);
 	}
 }

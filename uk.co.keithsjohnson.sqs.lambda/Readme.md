@@ -32,7 +32,11 @@ gradlew clean build
 Lambda Handler Information
 --------------------------
 Name: XmlToJSONConverterLamda
-Handler: uk.co.keithsjohnson.sqs.lambda.SQSMessagesHandlerLambda::handleSendSQSRequestMessagesToQueue
+Handler: 
+uk.co.keithsjohnson.sqs.lambda.SQSMessagesHandlerLambda::handleSendSQSRequestMessagesToQueue
+uk.co.keithsjohnson.sqs.lambda.SQSMessagesHandlerLambda::handleSQSXmlToJsonConverter
+
+uk.co.keithsjohnson.xmltojsonconverter.lambda.XmlToJSONConverterLamda::handleSQSXmlToJsonConverter
 Role: <Pick a role that has read and write access to S3>
 Runtime: Java 8
 Memory: 512Mb
@@ -80,11 +84,25 @@ Test Data
       "id" : "11",
       "snsTopicArn" : "arn:aws:sns:eu-west-1:656423721434:XMLToJSON",
       "subject" : "Test11",
-      "sqsRequest" : "<report type='s3' xml-select-expression='/report/city' jrxml-location='jasperreports-jrxml' jrxml='report.jrxml' pdf-location='jasperreports-generated-pdf' pdf='s3-report.pdf'><city><name>New York</name><population>12000000</population></city><city><name>Manchester</name><population>1000000</population></city><city><name>Stoke</name><population>123456</population></city></report>"
+      "sqsRequest" : "{\"xmlRequest\": \"<report type='s3' xml-select-expression='/report/city' jrxml-location='jasperreports-jrxml' jrxml='report.jrxml' pdf-location='jasperreports-generated-pdf' pdf='s3-report.pdf'><city><name>New York</name><population>12000000</population></city><city><name>Manchester</name><population>1000000</population></city><city><name>Stoke</name><population>123456</population></city></report>\"}"
     }
   ]
 }
 
+{
+  "sqsUrl": "https://sqs.eu-west-1.amazonaws.com/656423721434/LambdaTest",
+  "sqsRequestType": "sendSNS",
+  "sqsMessageRequestsList": [
+    { 
+      "id" : "11",
+      "snsTopicArn" : "arn:aws:sns:eu-west-1:656423721434:XMLToJSON",
+      "subject" : "Test11",
+      "sqsRequest" : "{xmlRequest:<report type='s3' xml-select-expression='/report/city' jrxml-location='jasperreports-jrxml' jrxml='report.jrxml' pdf-location='jasperreports-generated-pdf' pdf='s3-report.pdf'><city><name>New York</name><population>12000000</population></city><city><name>Manchester</name><population>1000000</population></city><city><name>Stoke</name><population>123456</population></city></report>}"
+    }
+  ]
+}
 
-
-
+This works with SQSXmlToJsonConverter when published using AWS Console API:
+{ 
+      "default" : "{\"xmlRequest\": \"<report type='s3' xml-select-expression='/report/city' jrxml-location='jasperreports-jrxml' jrxml='report.jrxml' pdf-location='jasperreports-generated-pdf' pdf='s3-report.pdf'><city><name>New York</name><population>12000000</population></city><city><name>Manchester</name><population>1000000</population></city><city><name>Stoke</name><population>123456</population></city></report>\"}"
+}

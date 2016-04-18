@@ -1,6 +1,7 @@
 package uk.co.keithsjohnson.xmltojsonconverter.lambda;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import uk.co.keithsjohnson.sqs.lambda.SQSMessagesHandlerLambda;
@@ -18,6 +19,7 @@ public class SQSMessageHandlerLamdaTest {
 	}
 
 	@Test
+	@Ignore
 	public void shouldSendSQSRequestMessagesToQueue() {
 		// SQSMessageRequest sqsMessageRequest = new SQSMessageRequest(XMLS3);
 

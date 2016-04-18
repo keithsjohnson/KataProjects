@@ -1,13 +1,16 @@
 package uk.co.keithsjohnson.xmltojsonconverter.lambda.api;
 
 public class XMLRequest {
+	private String message;
+
 	private String xmlRequest;
 
 	public XMLRequest() {
 	}
 
-	public XMLRequest(String xmlRequest) {
+	public XMLRequest(String message, String xmlRequest) {
 		this.xmlRequest = xmlRequest;
+		this.message = message;
 	}
 
 	public String getXmlRequest() {
@@ -18,8 +21,16 @@ public class XMLRequest {
 		this.xmlRequest = xmlRequest;
 	}
 
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
 	@Override
 	public String toString() {
-		return "XMLRequest [xmlRequest=" + xmlRequest + "]";
+		return "XMLRequest [message=" + message + ", xmlRequest=" + xmlRequest + "]";
 	}
 }

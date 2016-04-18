@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.amazonaws.services.s3.model.Region;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSClient;
 import com.amazonaws.services.sns.model.PublishRequest;
@@ -39,6 +40,7 @@ public class SQSMessageRequestSender {
 	public SQSMessageRequestSender() {
 		sqsClient = new AmazonSQSClient();
 		snsClient = new AmazonSNSClient();
+		snsClient.setRegion(Region.EU_Ireland.toAWSRegion());
 	}
 
 	public SqsMessageResponsesList sendSQSMessageRequest(
