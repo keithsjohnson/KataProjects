@@ -63,14 +63,17 @@ This works in SQSMessagesRequestHandlerLambda using AWS Lambda Test API: The Lam
   ]
 }
 
-
 This works with SQSXmlToJsonConverter when message published to SNS: arn:aws:sns:eu-west-1:656423721434:XMLToJSON using AWS SNS Console API:
 { 
       "default" : "{\"xmlRequest\": \"<report type='s3' xml-select-expression='/report/city' jrxml-location='jasperreports-jrxml' jrxml='report.jrxml' pdf-location='jasperreports-generated-pdf' pdf='s3-report.pdf'><city><name>New York</name><population>12000000</population></city><city><name>Manchester</name><population>1000000</population></city><city><name>Stoke</name><population>123456</population></city></report>\"}"
 }
 
 uk.co.keithsjohnson.xmltojsonconverter.lambda.XmlToJSONConverterLamda::handleXmlToJsonConverter
-This works with XmlToJsonConverter Lambda from Lambda Console Test API:
+This JSON Request works with XmlToJsonConverter Lambda from Lambda Console Test API:
+This JSON Request also works with XML To JSON Converter API (XMLToJSONConverterAPI) when posted to Lambda:
 {
   "xmlRequest": "<report type='s3' xml-select-expression='/report/city' jrxml-location='jasperreports-jrxml' jrxml='report.jrxml' pdf-location='jasperreports-generated-pdf' pdf='s3-report.pdf'><city><name>New York</name><population>12000000</population></city><city><name>Manchester</name><population>1000000</population></city><city><name>Stoke</name><population>123456</population></city></report>"
 }
+
+S3 URL:
+https://s3-eu-west-1.amazonaws.com/xmltojsonconverter-html/index.html

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>XML to JSON Converter</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+	<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.css">
+    <script type="text/javascript" src= "https://code.jquery.com/jquery-2.1.4.js" ></script>
+    <script type="text/javascript">
+    var initialXmlCityData = "<report type='s3' xml-select-expression='/report/city' jrxml-location='jasperreports-jrxml' jrxml='report.jrxml' pdf-location='jasperreports-generated-pdf' pdf='s3-report.pdf'><city><name>New York</name><population>12000000</population></city><city><name>Manchester</name><population>1000000</population></city><city><name>Stoke</name><population>123456</population></city></report>";
+   	var initialXmlDietData = "<report type='s3' xml-select-expression='/report/food' jrxml-location='jasperreports-jrxml' jrxml='XMLDSReport.jrxml' pdf-location='jasperreports-generated-pdf' pdf='s3-simple.pdf'><food><name>Belgian Waffles</name><price>5.95</price><description>Two of our famous Belgian Waffles with plenty of real maple syrup</description><calories>650</calories></food><food><name>Strawberry Belgian Waffles</name><price>7.95</price><description>Light Belgian waffles covered with strawberries and whipped cream</description><calories>900</calories></food><food><name>Berry-Berry Belgian Waffles</name><price>8.95</price><description>Light Belgian waffles covered with an assortment of fresh berries and whipped cream</description><calories>900</calories></food><food><name>French Toast</name><price>4.50</price><description>Thick slices made from our homemade sourdough bread</description><calories>600</calories></food><food><name>Homestyle Breakfast</name><price>6.95</price><description>Two eggs, bacon or sausage, toast, and our ever-popular hash browns</description><calories>950</calories></food></report>";
+
+    function createSingleInSameWindow(TextareaString, inWindow) {
+    	var xmlData = document.getElementById(TextareaString).value;
+    	var jsonDataPost = "{\"xmlRequest\": \""+xmlData+"\"}]}";
+    	post(jsonDataPost, inWindow);
+    }
+    
+    function resetSingleInSameWindow(TextareaString, inWindow) {
+		CityTextarea.value=initialXmlCityData;
+		DietTextarea.value=initialXmlDietData;
+    }
+    
+    function post(jsonDataPost, inWindow) {
+    	var uri = "https://fkdujg4pc5.execute-api.eu-west-1.amazonaws.com/XMLToJSONConverterAPI";
+    	console.log("uri: " + uri);
+    	var jqxhr = $.ajax( {method: "POST", url: uri, data: jsonDataPost} ) 
+    	  .done(function(response) {
+    		console.log( "success: " + response.jsonResponse );
+    		CityTextarea.value=response.jsonResponse;
+    	  })
+    	  .fail(function(response) {
+    	    alert( "error " + response );
+    	  });
+    }
+    
+    function createBothsInNewWindows() {
+    	var xmlCityData = document.getElementById('CityTextarea').value;
+    	var xmlDietData = document.getElementById('DietTextarea').value;
+    	var jsonDataPost = "{\"xmlRequestData\": [{\"xmlRequest\" : \""+xmlCityData+"\"},{\"xmlRequest\" : \""+xmlDietData+"\"}]}";
+    	post(jsonDataPost, 'newWindow');
+    }
+ 
+    function initialize() {
+     	var CityTextarea = document.getElementById('CityTextarea');
+       	CityTextarea.value=initialXmlCityData;
+
+       	var DietTextarea = document.getElementById('DietTextarea');
+       	DietTextarea.value=initialXmlDietData;
+    }
+    </script>
+</head>
+<body onLoad="initialize();">
+<div>
+  <H1>AWS Serverless Code: XML to JSON Converter</H1>
+  <H2>Using AWS Services: S3, API Gateway, AWS Lambda, Java 8 and Jackson XML & JSON Object Mappers</H2>
+  <div>City XML to JSON:</div>
+  <div><button id="createCity" onclick="createSingleInSameWindow('CityTextarea','_self');">Create City XML to JSON</button>
+       <button id="resetCity" onclick="resetSingleInSameWindow('CityTextarea','_self');">Reset City XML</button></div>
+  <div><textarea id="CityTextarea" name="CityTextarea" cols="200" rows="20" style="width: 360px; height: 220px;" wrap="soft"></textarea></div>
+  <div>Diet XML to JSON:</div>
+  <div><button id="createDiet" onclick="createSingleInSameWindow('DietTextarea','_self');">Create Diet XML to JSON</button></div>
+  <div><textarea id="DietTextarea" name="DietTextarea" cols="200" rows="20" style="width: 360px; height: 590px;" wrap="soft"></textarea></div>
+  <div>City and Diet XML to JSON in New Window:</div>
+  <div><button id="creates" onclick="createBothsInNewWindows();">Create City and Diet XML to JSON</button></div>
+</div>
+</body>
+</html>
